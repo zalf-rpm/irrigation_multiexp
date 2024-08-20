@@ -1,4 +1,4 @@
-Soil;Depth;Sand;Silt;Clay;Corg;pH;Raw_density;Pore_volume;Field_capaity;nKF;Wilting_point;KA5TextureClass
+Soil;Depth;Sand;Silt;Clay;Corg;pH;Raw_density;Pore_volume;Field_capacity;nKF;Wilting_point;KA5TextureClass
 soil1;30;0.825;0.083;0.092;;7.220;;;;;;
 soil2;30;0.869;0.060;0.072;;8.000;;;;;;
 soil2;60;0.847;0.080;0.073;;;;;;;;
