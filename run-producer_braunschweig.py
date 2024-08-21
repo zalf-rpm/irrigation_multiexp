@@ -147,7 +147,7 @@ def run_producer(server=None, port=None):
     for _, row in merged_df_till.iterrows():
         till_temp = copy.deepcopy(till_template)
         exp_no = row['Experiment']
-        till_temp["date"] = datetime.strptime(row['Date'], '%d.%m.%Y').isoformat()
+        till_temp["date"] = datetime.strptime(row['Date'], '%d.%m.%Y').strftime('%Y-%m-%d')
         till_temp["depth"] = [float(row['Depth']) / 100.0, 'm']
         exp_no_to_management[exp_no][till_temp["date"]] = till_temp
 
