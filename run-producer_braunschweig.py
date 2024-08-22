@@ -26,7 +26,9 @@ import pandas as pd
 from datetime import datetime
 
 import monica_io3
+import soil_io3
 import shared
+from soil_io3 import sand_and_clay_to_ka5_texture, sand_and_clay_to_lambda
 
 
 def run_producer(server=None, port=None):
@@ -106,10 +108,12 @@ def run_producer(server=None, port=None):
             "Sand": [float(row['Sand']), "m3/m3"],
             "Silt": [float(row['Silt']), "m3/m3"],
             "pH": float(row['pH']),
-            "KA5TextureClass": row['KA5TextureClass'] if pd.notnull(row['KA5TextureClass']) else None,
-            "SoilMoisturePercentFC": 50.0,
+            "KA5TextureClass": row['KA5TextureClass'] if pd.notnull(row['KA5TextureClass']) else
+            sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
+            "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
+            "SoilMoisturePercentFC": [50.0, "%"],
             # Spread 50 kg N for the first 50 cm of soil
-            "SoilNitrate": [10, "kg N/m3"] if cumulative_depth <= 0.5 else [0, "kg N/m3"]
+            "SoilNitrate": [10, "kg NO3-N/m3"] if cumulative_depth <= 0.5 else [0, "kg NO3-N/m3"]
         }
         soil_profiles[soil_name].append(layer)
 
@@ -197,6 +201,10 @@ def run_producer(server=None, port=None):
         socket.send_json(env_template)
         no_of_exps += 1
         print(f"{os.path.basename(__file__)} sent job {no_of_exps}")
+
+        # Save the sent env_template as a JSON file
+        with open(f"out_braunschweig/env_template_{exp_no}.json", "w") as _:
+            json.dump(env_template, _, indent=4)
 
     # send done message
     env_template["customId"] = {
