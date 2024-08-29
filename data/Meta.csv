@@ -1,8 +1,8 @@
 Experiment;Name;Weather;Soil;Year;Sowing;Harvest;Irrigation;Management;Fertilisation_org;Fertilisation_min;Residues;CO2;Crop;Cultivar;Lat;Long;Elevation
-EX1;ATB_Marquart;weather1;soil1;2015;19.10.2015;22.07.2015;irrig1;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
-EX2;ATB_Marquart;weather1;soil1;2015;19.10.2015;22.07.2015;no_irrig;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
-EX3;ATB_Marquart;weather1;soil2;2015;19.10.2015;04.08.2015;irrig1;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
-EX4;ATB_Marquart;weather1;soil2;2015;19.10.2015;04.08.2015;no_irrig;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
+EX1;ATB_Marquart;weather1;soil1;2015;19.10.2014;22.07.2015;irrig1;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
+EX2;ATB_Marquart;weather1;soil1;2015;19.10.2014;22.07.2015;no_irrig;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
+EX3;ATB_Marquart;weather1;soil2;2015;19.10.2014;04.08.2015;irrig1;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
+EX4;ATB_Marquart;weather1;soil2;2015;19.10.2014;04.08.2015;no_irrig;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
 EX5;ATB_Marquart;weather1;soil1;2016;12.10.2015;20.07.2016;no_irrig;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
 EX6;ATB_Marquart;weather1;soil1;2016;12.10.2015;20.07.2016;irrig2;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
 EX7;ATB_Marquart;weather1;soil2;2016;12.10.2015;20.07.2016;irrig2;;no_fert;;no_resi;no_co2;WW;Opal, Kerubino;52.467;12.959;40
@@ -611,7 +611,7 @@ EX609;ZALF_Muencheberg_V4;weather13;soil8;2023;05.05.2023;06.09.2023;no_irrig;ma
 EX610;ZALF_Muencheberg_V4;weather13;soil8;2023;05.05.2023;06.09.2023;irrig63;manag67;no_fert;no_fert;no_resi;no_co2;SM;no_cultivar;52.517;14.124;64
 EX611;ZALF_Muencheberg_V4;weather13;soil8;2023;05.05.2023;06.09.2023;irrig63;manag68;no_fert;no_fert;no_resi;no_co2;SM;no_cultivar;52.517;14.124;64
 EX612;ZALF_Muencheberg_V4;weather13;soil8;2023;26.09.2022;18.07.2023;no_irrig;manag73;no_fert;fert111;no_resi;no_co2;WW;no_cultivar;52.517;14.124;64
-EX615;ZALF_Muencheberg_V4;weather13;soil8;2023;26.09.2022;18.07.2023;irrig64;manag73;no_fert;fert111;no_resi;no_co2;WW;no_cultivar;52.517;14.124;64
+EX613;ZALF_Muencheberg_V4;weather13;soil8;2023;26.09.2022;18.07.2023;irrig64;manag73;no_fert;fert111;no_resi;no_co2;WW;no_cultivar;52.517;14.124;64
 EX616;JKI_Braunschweig_Rainshelter;weather12;soil9;2010;;;wet;;;;;;WB;Campanile;52.296;10.436;75
 EX617;JKI_Braunschweig_Rainshelter;weather12;soil9;2010;;;wet;;;;;;WB;Fridericus;52.296;10.436;75
 EX618;JKI_Braunschweig_Rainshelter;weather12;soil9;2010;;;wet;;;;;;WB;Highlight;52.296;10.436;75
@@ -671,4 +671,3 @@ EX671;JKI_Braunschweig_Rainshelter;weather12;soil9;2011;;;dry;;;;;;WW;Hyland;52.
 EX672;JKI_Braunschweig_Rainshelter;weather12;soil9;2011;;;dry;;;;;;WW;Kredo;52.296;10.436;75
 EX673;JKI_Braunschweig_Rainshelter;weather12;soil9;2011;;;dry;;;;;;WW;Ludwig;52.296;10.436;75
 EX674;JKI_Braunschweig_Rainshelter;weather12;soil9;2011;;;dry;;;;;;WW;Manager;52.296;10.436;75
-EX675;UTP_Bydgoszcz;;;;;;;;;;;;;;;;
