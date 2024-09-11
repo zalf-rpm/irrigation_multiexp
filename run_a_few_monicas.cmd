@@ -1,4 +1,4 @@
-set PATH_TO_MONICA_BIN_DIR=C:\Users\escueta\MONICA\monica_win64_3.6.23.capillary_rise_rate\bin
+set PATH_TO_MONICA_BIN_DIR=C:\MONICA\monica_win64_3.6.23.capillary_rise_rate\bin
 
 START "ZMQ_IN_PROXY" /MIN %PATH_TO_MONICA_BIN_DIR%\monica-zmq-proxy -pps -f 6666 -b 6677 &
 START "ZMQ_OUT_PROXY" /MIN %PATH_TO_MONICA_BIN_DIR%\monica-zmq-proxy -pps -f 7788 -b 7777 &
