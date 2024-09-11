@@ -40,7 +40,7 @@ def run_producer(server=None, port=None):
         "sim.json": os.path.join(os.path.dirname(__file__), "sim.json"),
         "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
-        "monica_path_to_climate_dir": "C:/Users/escueta/PycharmProjects/irrigation_multiexp/data",
+        "monica_path_to_climate_dir": "C:/Users/palka/GitHub/irrigation_multiexp/data",
         "path_to_data_dir": "./data/",
         "path_to_out": "out/",
     }
