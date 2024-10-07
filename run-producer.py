@@ -167,16 +167,16 @@ def run_producer(server=None, port=None):
         # Skip experiments with these crops
         if meta['Crop'] in ['PO', 'WC', 'ZU', 'TR']:
             continue
-        # Crops for simulation: WW, WB, SB, WR, SM, SW
+        # Crops for simulation: WW, WB, SB, WR, SM, SW (no data fow SW (yet))
         if (meta['Crop'] != 'WW' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
-        # if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
-                ['JKI_Braunschweig_Rainshelter',
-                 'UTP_Bydgoszcz',
+        #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
+                ['ATB_Marquart',
                  'FI_Dahlhausen',
-                 #'ATB_Marquart',
-                 #'TI_Braunschweig_FACE',
+                 'HUB_Thyrow_D1',
+                 'TI_Braunschweig_FACE',
                  #'ZALF_Muencheberg_V4',
-                 #'HUB_Thyrow_D1'
+                 'JKI_Braunschweig_Rainshelter',
+                 'UTP_Bydgoszcz'
                  ]):
             continue
 
@@ -210,7 +210,7 @@ def run_producer(server=None, port=None):
 
         worksteps_copy = copy.deepcopy(worksteps)
         sowing_date = datetime.strptime(meta['Sowing'], '%d.%m.%Y')
-        worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d')
+        worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d') ## for start date, see line 294 in run-producer_1_1.py from agmip waterlogging###
         harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
         worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
 
