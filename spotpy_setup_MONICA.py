@@ -58,7 +58,7 @@ class SpotSetup(object):
                     # row["maxbound"]
                 ))
 
-        # Read our envoronment template which was created by the run producer script but not send to monica but wrote to file
+        # Read our environment template which was created by the run producer script but not send to monica but wrote to file
         # with open("./out/env_template_EX53.json", "r") as f:
         #     self.env_template = json.load(f)
 
@@ -71,7 +71,7 @@ class SpotSetup(object):
         for index, row in obslist.iterrows():
             if row['Experiment'] in list_of_experiments:
                 self.observations.append((row['Experiment'], row["Grain_dm_kg_ha"]))
-        # for simpler comparions we sort the observations by experiment number as we do with simulations
+        # for simpler comparisons we sort the observations by experiment number as we do with simulations
         # and then we only keep the values
         self.observations = [v for (e, v) in sorted(self.observations, key=lambda ob: ob[0])]
 

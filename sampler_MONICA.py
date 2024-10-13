@@ -41,7 +41,7 @@ observations = "Measurements.csv"
 basepath = Path(os.path.dirname(os.path.abspath(__file__)))
 
 # Read list of selected experiments we want to run the calibration for.
-# In the calibration results each experimaent is a simulation, like for the first one simulation_0, for the second one simulation_1 and so on.
+# In the calibration results each experiment is a simulation, like for the first one simulation_0, for the second one simulation_1 and so on.
 crop_site_map_df = pd.read_csv(os.path.join(basepath, crop_sim_site_MAP), delimiter=",")
 
 # read observations for which the likelihood of parameter space is calculated
@@ -61,13 +61,13 @@ spot_setup = spotpy_setup_MONICA.SpotSetup(calib_params_df,
                                            measurements_df)
 
 # the same as for example: spot_setup = spot_setup(spotpy.objectivefunctions.rmse)
-# Select maximum number of repititions
+# Select maximum number of repetitions
 
 rep = 3 # 5000  # initial number was 10
 # Set up the sampler with the model above
 sampler = spotpy.algorithms.mc(spot_setup, dbname='calib_out/SCEUA_monica_results', dbformat='csv')
 
-# Run the sampler to produce the paranmeter distribution
+# Run the sampler to produce the parameter distribution
 # and identify optimal parameters based
 # on objective function
 sampler.sample(rep)
