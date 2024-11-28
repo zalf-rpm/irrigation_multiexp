@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 from threading import Thread
+from dateutil.relativedelta import relativedelta
 
 import spotpy
 import pandas as pd
@@ -11,6 +12,12 @@ import zmq
 
 import monica_io3
 from soil_io3 import sand_and_clay_to_ka5_texture, sand_and_clay_to_lambda
+
+#myStage=5
+#myTarget="AbBiom" #Biomass_dm
+#myTarget="AbBiomNc" #Biomass_dm_nconc
+#myTarget="OrgBiom/Fruit" #Grain_dm
+#myTarget="OrgBiom/Shoot" #Stem_dm
 
 
 class SpotSetup(object):
@@ -20,8 +27,8 @@ class SpotSetup(object):
 
     PATH_TO_DATA_DIR = Path("./data")
 
-    # MONICA_PATH_TO_CLIMATE_DIR  = "C:/Users/palka/GitHub/irrigation_multiexp/data"
-    MONICA_PATH_TO_CLIMATE_DIR  = "C:/Users/escueta/PycharmProjects/irrigation_multiexp/data"
+    MONICA_PATH_TO_CLIMATE_DIR  = "C:/Users/palka/GitHub/irrigation_multiexp/data"
+    # MONICA_PATH_TO_CLIMATE_DIR  = "C:/Users/escueta/PycharmProjects/irrigation_multiexp/data"
 
     def __init__(self, user_params: pd.DataFrame, exp_maps: pd.DataFrame, obslist: pd.DataFrame):
         """
@@ -70,7 +77,7 @@ class SpotSetup(object):
         list_of_experiments = self.experiments['exp_ID'].values.tolist()
         for index, row in obslist.iterrows():
             if row['Experiment'] in list_of_experiments:
-                self.observations.append((row['Experiment'], row["Grain_dm_kg_ha"]))
+                self.observations.append((row['Experiment'], row["Grain_dm_kg_ha"])) # Change the row name according to the target  variable.
         # for simpler comparisons we sort the observations by experiment number as we do with simulations
         # and then we only keep the values
         self.observations = [v for (e, v) in sorted(self.observations, key=lambda ob: ob[0])]
@@ -109,7 +116,7 @@ class SpotSetup(object):
             BaseDaylength = {}
             DaylengthRequirement = {}
             VernalisationRequirement = {}
-            for i, name in enumerate(vector.name):
+            for i, name in enumerate(vector.name): #That is for the stage-specific values.
                 if name.startswith("SpecificLeafArea_"):
                     SpecificLeafArea[int(name.split('_')[1]) - 1] = vector[i]
                 if name.startswith("StageTemperatureSum_"):
@@ -189,7 +196,7 @@ class SpotSetup(object):
         :param evaluation:
         :return:
         """
-        objectivefunction = spotpy.objectivefunctions.rmse(evaluation,simulation)
+        objectivefunction = spotpy.objectivefunctions.rmse(evaluation,simulation) # We are using RMSE as objectiove function.
         return objectivefunction
 
     def collect_results(self):
@@ -208,7 +215,7 @@ class SpotSetup(object):
 
             results_rec = []
             ############################################################
-            calib_data = rec_msg["data"][5]['results'][0]['OrgBiom/Fruit']
+            calib_data = rec_msg["data"][5]['results'][0]["Grain_dm_kg_ha"] #This also needs to change
             exp_id = rec_msg["customId"]['exp_no']
             results_rec.append(calib_data)
             self.out[exp_id] = results_rec
@@ -356,6 +363,9 @@ class SpotSetup(object):
             harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
             worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
 
+           # I need to update this to include a spin-up period
+           #env_template["csvViaHeaderOptions"]["start-date"]= (sowing_date - relativedelta(months=6)).strftime('%Y-%m-%d')
+
             for date in sorted(dates):
                 if date in exp_no_to_fertilizers[exp_id]:
                     worksteps_copy.insert(-1, copy.deepcopy(exp_no_to_fertilizers[exp_id][date]))
@@ -365,6 +375,7 @@ class SpotSetup(object):
                     tillage_event = copy.deepcopy(exp_no_to_management[exp_id][date])
                     tillage_date = datetime.strptime(tillage_event["date"], '%Y-%m-%d')
                     # Only add tillage events happening after sowing and before harvest
+                    # This would change if I include a spin-up
                     if tillage_date >= sowing_date and tillage_date <= harvest_date:
                         worksteps_copy.insert(-1, tillage_event)
 

@@ -23,7 +23,6 @@ StageKcFactor;3;0.7;1.5;0.01;;;;
 StageKcFactor;4;0.7;1.5;0.01;;;;
 StageKcFactor;5;0.5;1.1;0.01;;;;
 StageKcFactor;6;0.15;0.35;0.01;;;;
-BaseDaylength;2;;;;;;;
 BaseDaylength;3;4;10;1;;;;
 BaseDaylength;4;4;10;1;;;;
 DaylengthRequirement;2;14;26;1;;;;

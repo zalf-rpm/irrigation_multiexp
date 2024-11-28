@@ -8,6 +8,29 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
+# Define experiments (=crops), parameters to calibrate, and repetitions.
+
+#crop_sim_site_MAP = "crop_sim_site_MAP_WW.csv"
+#calib_params_df = pd.read_csv("calibratethese_ww.csv", delimiter=";")
+
+crop_sim_site_MAP = "crop_sim_site_MAP_WB.csv"
+calib_params_df = pd.read_csv("calibratethese_wb.csv", delimiter=";")
+
+#crop_sim_site_MAP = "crop_sim_site_MAP_SB.csv" # SB doesn't work yet, as data from Bydgoszcz is incomplete.
+#calib_params_df = pd.read_csv("calibratethese_sb.csv", delimiter=";")
+
+#crop_sim_site_MAP = "crop_sim_site_MAP_WR.csv"
+#calib_params_df = pd.read_csv("calibratethese_wr.csv", delimiter=";")
+
+#crop_sim_site_MAP = "crop_sim_site_MAP_SM.csv"
+#calib_params_df = pd.read_csv("calibratethese_sm.csv", delimiter=";")
+
+#crop_sim_site_MAP = "crop_sim_site_MAP_SW.csv" # SW doesn't work yet, as data from Bydgoszcz is incomplete.
+#calib_params_df = pd.read_csv("calibratethese_sw.csv", delimiter=";")
+
+rep = 3 # 5000  # initial number was 10 # change to a reasonable value
+
+
 def add_identity(axes, *line_args, **line_kwargs):
     identity, = axes.plot([], [], *line_args, **line_kwargs)
 
@@ -33,10 +56,6 @@ def make_lambda(excel):
     return lambda v, p: eval(excel)
 
 
-crop_sim_site_MAP = "crop_sim_site_MAP.csv"
-observations = "Measurements.csv"
-
-
 # read general settings
 basepath = Path(os.path.dirname(os.path.abspath(__file__)))
 
@@ -47,10 +66,6 @@ crop_site_map_df = pd.read_csv(os.path.join(basepath, crop_sim_site_MAP), delimi
 # read observations for which the likelihood of parameter space is calculated
 # Read the observations from the measurements file.
 measurements_df = pd.read_csv("Measurements.csv", delimiter=";", skiprows=[1, 2])
-
-# Read the parameters which are to be calibrated.
-calib_params_df = pd.read_csv("calibratethese_ww.csv", delimiter=";")
-
 
 # Here, MONICA is initialized and a producer is started:
 # Arguments are: Parameters, Sites, Observations
@@ -63,7 +78,6 @@ spot_setup = spotpy_setup_MONICA.SpotSetup(calib_params_df,
 # the same as for example: spot_setup = spot_setup(spotpy.objectivefunctions.rmse)
 # Select maximum number of repetitions
 
-rep = 3 # 5000  # initial number was 10
 # Set up the sampler with the model above
 sampler = spotpy.algorithms.mc(spot_setup, dbname='calib_out/SCEUA_monica_results', dbformat='csv')
 

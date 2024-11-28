@@ -169,16 +169,17 @@ def run_producer(server=None, port=None):
             continue
         # Crops for simulation: WW, WB, SB, WR, SM, SW (no data fow SW (yet))
         if (meta['Crop'] != 'WW' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
-        #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
+        #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in,
                 ['ATB_Marquart',
                  'FI_Dahlhausen',
                  'HUB_Thyrow_D1',
-                 'TI_Braunschweig_FACE',
-                 #'ZALF_Muencheberg_V4',
+                 #'TI_Braunschweig_FACE',
+                 'ZALF_Muencheberg_V4',
                  'JKI_Braunschweig_Rainshelter',
                  'UTP_Bydgoszcz'
                  ]):
             continue
+        #nur der auskommentierte Standort wird berücksichtigt
 
         # Set the crop based on the experiment
         crop_json["cropRotation"][2] = meta['Crop']
