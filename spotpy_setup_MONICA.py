@@ -215,7 +215,7 @@ class SpotSetup(object):
 
             results_rec = []
             ############################################################
-            calib_data = rec_msg["data"][5]['results'][0]["Grain_dm_kg_ha"] #This also needs to change
+            calib_data = rec_msg["data"][5]['results'][0]['OrgBiom/Fruit'] #This also needs to change
             exp_id = rec_msg["customId"]['exp_no']
             results_rec.append(calib_data)
             self.out[exp_id] = results_rec
