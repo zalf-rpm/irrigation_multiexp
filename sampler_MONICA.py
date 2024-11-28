@@ -10,17 +10,17 @@ import pandas as pd
 
 # Define experiments (=crops), parameters to calibrate, and repetitions.
 
-#crop_sim_site_MAP = "crop_sim_site_MAP_WW.csv"
-#calib_params_df = pd.read_csv("calibratethese_ww.csv", delimiter=";")
+crop_sim_site_MAP = "crop_sim_site_MAP_WW.csv"
+calib_params_df = pd.read_csv("calibratethese_ww.csv", delimiter=";")
 
-crop_sim_site_MAP = "crop_sim_site_MAP_WB.csv"
-calib_params_df = pd.read_csv("calibratethese_wb.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_WB.csv"
+# calib_params_df = pd.read_csv("calibratethese_wb.csv", delimiter=";")
 
 #crop_sim_site_MAP = "crop_sim_site_MAP_SB.csv" # SB doesn't work yet, as data from Bydgoszcz is incomplete.
 #calib_params_df = pd.read_csv("calibratethese_sb.csv", delimiter=";")
 
-#crop_sim_site_MAP = "crop_sim_site_MAP_WR.csv"
-#calib_params_df = pd.read_csv("calibratethese_wr.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_WR.csv"
+# calib_params_df = pd.read_csv("calibratethese_wr.csv", delimiter=";")
 
 #crop_sim_site_MAP = "crop_sim_site_MAP_SM.csv"
 #calib_params_df = pd.read_csv("calibratethese_sm.csv", delimiter=";")

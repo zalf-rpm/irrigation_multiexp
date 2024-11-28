@@ -358,13 +358,13 @@ class SpotSetup(object):
 
             worksteps_copy = copy.deepcopy(worksteps)
             sowing_date = datetime.strptime(meta['Sowing'], '%d.%m.%Y')
-            worksteps_copy[0]["date"] = sowing_date.strftime(
-                '%Y-%m-%d')  ## for start date, see line 294 in run-producer_1_1.py from agmip waterlogging###
+            worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d')  ## for start date, see line 294 in run-producer_1_1.py from agmip waterlogging###
             harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
             worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
 
            # I need to update this to include a spin-up period
-           #env_template["csvViaHeaderOptions"]["start-date"]= (sowing_date - relativedelta(months=6)).strftime('%Y-%m-%d')
+            start_date = sowing_date - relativedelta(months=6)
+            env_template["csvViaHeaderOptions"]["start-date"] = start_date.strftime('%Y-%m-%d')
 
             for date in sorted(dates):
                 if date in exp_no_to_fertilizers[exp_id]:
