@@ -108,6 +108,10 @@ class SpotSetup(object):
             "Biomass_dm_nconc_%": "Biomass_dm_nconc_%",
             "Grain_dm_kg_ha": "Grain_dm_kg_ha",
             "Stem_dm_kg_ha": "Stem_dm_kg_ha",
+            "Emergence": "Emergence",
+            "Stem_elongation": "Stem_elongation",
+            "Anthesis": "Anthesis",
+            "Maturity": "Maturity",
             "SWAT_0-30_Sowing": "SWAT_0-30_Sowing",
             "SWAT_30-60_Sowing": "SWAT_30-60_Sowing",
             "SWAT_60-90_Sowing": "SWAT_60-90_Sowing",
@@ -126,10 +130,6 @@ class SpotSetup(object):
             "NMIN_0-30_Harvesting": "NMIN_0-30_Harvesting",
             "NMIN_30-60_Harvesting": "NMIN_30-60_Harvesting",
             "NMIN_60-90_Harvesting": "NMIN_60-90_Harvesting",
-            "Emergence": "Emergence",
-            "Stem_elongation": "Stem_elongation",
-            "Anthesis": "Anthesis",
-            "Maturity": "Maturity"
         }
 
         for index, row in obslist.iterrows():
@@ -150,7 +150,7 @@ class SpotSetup(object):
         # and then we only keep the values
         self.observations = [v for (e, v) in sorted(self.observations, key=lambda ob: ob[0])]
 
-        # print("Final observations:", self.observations)
+        print("Final observations:", self.observations)
 
         self.context = zmq.Context()
         self.socket_producer = self.context.socket(zmq.PUSH)
