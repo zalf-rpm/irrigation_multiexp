@@ -1,6 +1,7 @@
 import copy
 from collections import defaultdict, OrderedDict
 import json
+import numpy as np
 from datetime import datetime
 from pathlib import Path
 from threading import Thread
@@ -65,23 +66,91 @@ class SpotSetup(object):
                     # row["maxbound"]
                 ))
 
-        # Read our environment template which was created by the run producer script but not send to monica but wrote to file
-        # with open("./out/env_template_EX53.json", "r") as f:
-        #     self.env_template = json.load(f)
-
         self.env_templates = self._create_env()  # create the environment.json for each experiment
 
         # Observations data
         # add only the values for the experiments we have to do??
-        self.observations = [] #for spotpy
+        self.observations = [] # for spotpy
         list_of_experiments = self.experiments['exp_ID'].values.tolist()
+
+        # Configuration to select which observations to use
+        self.config = {
+            "Biomass_dm_kg_ha": False,
+            "Biomass_dm_nconc_%": False,
+            "Grain_dm_kg_ha": True,
+            "Stem_dm_kg_ha": False,
+            "Emergence": False,
+            "Stem_elongation": False,
+            "Anthesis": False,
+            "Maturity": True,
+            "SWAT_0-30_Sowing": False,
+            "SWAT_30-60_Sowing": False,
+            "SWAT_60-90_Sowing": False,
+            "NMIN_0-30_Sowing": False,
+            "NMIN_30-60_Sowing": False,
+            "NMIN_60-90_Sowing": False,
+            "SWAT_0-30_Anthesis": False,
+            "SWAT_30-60_Anthesis": False,
+            "SWAT_60-90_Anthesis": False,
+            "NMIN_0-30_Anthesis": False,
+            "NMIN_30-60_Anthesis": False,
+            "NMIN_60-90_Anthesis": False,
+            "SWAT_0-30_Harvesting": False,
+            "SWAT_30-60_Harvesting": False,
+            "SWAT_60-90_Harvesting": False,
+            "NMIN_0-30_Harvesting": False,
+            "NMIN_30-60_Harvesting": False,
+            "NMIN_60-90_Harvesting": False,
+        }
+
+        params_to_columns = {
+            "Biomass_dm_kg_ha": "Biomass_dm_kg_ha",
+            "Biomass_dm_nconc_%": "Biomass_dm_nconc_%",
+            "Grain_dm_kg_ha": "Grain_dm_kg_ha",
+            "Stem_dm_kg_ha": "Stem_dm_kg_ha",
+            "SWAT_0-30_Sowing": "SWAT_0-30_Sowing",
+            "SWAT_30-60_Sowing": "SWAT_30-60_Sowing",
+            "SWAT_60-90_Sowing": "SWAT_60-90_Sowing",
+            "NMIN_0-30_Sowing": "NMIN_0-30_Sowing",
+            "NMIN_30-60_Sowing": "NMIN_30-60_Sowing",
+            "NMIN_60-90_Sowing": "NMIN_60-90_Sowing",
+            "SWAT_0-30_Anthesis": "SWAT_0-30_Anthesis",
+            "SWAT_30-60_Anthesis": "SWAT_30-60_Anthesis",
+            "SWAT_60-90_Anthesis": "SWAT_60-90_Anthesis",
+            "NMIN_0-30_Anthesis": "NMIN_0-30_Anthesis",
+            "NMIN_30-60_Anthesis": "NMIN_30-60_Anthesis",
+            "NMIN_60-90_Anthesis": "NMIN_60-90_Anthesis",
+            "SWAT_0-30_Harvesting": "SWAT_0-30_Harvesting",
+            "SWAT_30-60_Harvesting": "SWAT_30-60_Harvesting",
+            "SWAT_60-90_Harvesting": "SWAT_60-90_Harvesting",
+            "NMIN_0-30_Harvesting": "NMIN_0-30_Harvesting",
+            "NMIN_30-60_Harvesting": "NMIN_30-60_Harvesting",
+            "NMIN_60-90_Harvesting": "NMIN_60-90_Harvesting",
+            "Emergence": "Emergence",
+            "Stem_elongation": "Stem_elongation",
+            "Anthesis": "Anthesis",
+            "Maturity": "Maturity"
+        }
+
         for index, row in obslist.iterrows():
             if row['Experiment'] in list_of_experiments:
-                self.observations.append((row['Experiment'], row["Grain_dm_kg_ha"])) # Change the row name according to the target  variable.
+                for param, column in params_to_columns.items():
+                    if self.config.get(param):
+                        value = row[column] if pd.notna(row[column]) else np.nan
+
+                        if param in ["Emergence", "Stem_elongation", "Anthesis", "Maturity"]:
+                            if pd.notna(value):
+                                value = datetime.strptime(value, '%d.%m.%Y').timetuple().tm_yday
+                            else:
+                                value = np.nan
+
+                        self.observations.append((row['Experiment'], value))
+
         # for simpler comparisons we sort the observations by experiment number as we do with simulations
         # and then we only keep the values
         self.observations = [v for (e, v) in sorted(self.observations, key=lambda ob: ob[0])]
 
+        # print("Final observations:", self.observations)
 
         self.context = zmq.Context()
         self.socket_producer = self.context.socket(zmq.PUSH)
@@ -172,7 +241,6 @@ class SpotSetup(object):
         # wait until the collector finishes
         collector.join()
 
-
         # build the evaluation list for spotpy
         evallist = []
         ordered_out = OrderedDict(sorted(self.out.items()))
@@ -206,6 +274,36 @@ class SpotSetup(object):
         # socket_collector.connect("tcp://localhost:7777")
         received_results = 0
         leave = False
+
+        param_extraction_config = {
+            "Biomass_dm_kg_ha": lambda rec_msg: rec_msg["data"][5]['results'][0].get('AbBiom', np.nan),
+            "Biomass_dm_nconc_%": lambda rec_msg: rec_msg["data"][5]['results'][0].get('AbBiomNc', np.nan),
+            "Grain_dm_kg_ha": lambda rec_msg: rec_msg["data"][5]['results'][0].get('OrgBiom/Fruit', np.nan),
+            "Stem_dm_kg_ha": lambda rec_msg: rec_msg["data"][5]['results'][0].get('OrgBiom/Shoot', np.nan),
+            "Emergence": lambda rec_msg: self._extract_date(rec_msg, 1),
+            "Stem_elongation": lambda rec_msg: self._extract_date(rec_msg, 2),
+            "Anthesis": lambda rec_msg: self._extract_date(rec_msg, 3),
+            "Maturity": lambda rec_msg: self._extract_date(rec_msg, 4),
+            "SWAT_0-30_Sowing": lambda rec_msg: rec_msg["data"][0]['results'][0].get('Mois', [np.nan])[0],
+            "SWAT_30-60_Sowing": lambda rec_msg: rec_msg["data"][0]['results'][0].get('Mois', [np.nan])[1],
+            "SWAT_60-90_Sowing": lambda rec_msg: rec_msg["data"][0]['results'][0].get('Mois', [np.nan])[2],
+            "NMIN_0-30_Sowing": lambda rec_msg: rec_msg["data"][0]['results'][0].get('N', [np.nan])[0],
+            "NMIN_30-60_Sowing": lambda rec_msg: rec_msg["data"][0]['results'][0].get('N', [np.nan])[1],
+            "NMIN_60-90_Sowing": lambda rec_msg: rec_msg["data"][0]['results'][0].get('N', [np.nan])[2],
+            "SWAT_0-30_Anthesis": lambda rec_msg: rec_msg["data"][3]['results'][0].get('Mois', [np.nan])[0],
+            "SWAT_30-60_Anthesis": lambda rec_msg: rec_msg["data"][3]['results'][0].get('Mois', [np.nan])[1],
+            "SWAT_60-90_Anthesis": lambda rec_msg: rec_msg["data"][3]['results'][0].get('Mois', [np.nan])[2],
+            "NMIN_0-30_Anthesis": lambda rec_msg: rec_msg["data"][3]['results'][0].get('N', [np.nan])[0],
+            "NMIN_30-60_Anthesis": lambda rec_msg: rec_msg["data"][3]['results'][0].get('N', [np.nan])[1],
+            "NMIN_60-90_Anthesis": lambda rec_msg: rec_msg["data"][3]['results'][0].get('N', [np.nan])[2],
+            "SWAT_0-30_Harvesting": lambda rec_msg: rec_msg["data"][5]['results'][0].get('Mois', [np.nan])[0],
+            "SWAT_30-60_Harvesting": lambda rec_msg: rec_msg["data"][5]['results'][0].get('Mois', [np.nan])[1],
+            "SWAT_60-90_Harvesting": lambda rec_msg: rec_msg["data"][5]['results'][0].get('Mois', [np.nan])[2],
+            "NMIN_0-30_Harvesting": lambda rec_msg: rec_msg["data"][5]['results'][0].get('N', [np.nan])[0],
+            "NMIN_30-60_Harvesting": lambda rec_msg: rec_msg["data"][5]['results'][0].get('N', [np.nan])[1],
+            "NMIN_60-90_Harvesting": lambda rec_msg: rec_msg["data"][5]['results'][0].get('N', [np.nan])[2],
+        }
+
         while not leave:
             try:
                 # Start consumer here and save to json output
@@ -215,30 +313,34 @@ class SpotSetup(object):
 
             results_rec = []
             ############################################################
-            calib_data = rec_msg["data"][5]['results'][0]['OrgBiom/Fruit'] #This also needs to change
-            exp_id = rec_msg["customId"]['exp_no']
-            results_rec.append(calib_data)
-            self.out[exp_id] = results_rec
-            ############################################################
-            # for res in rec_msg["data"]:
-            #     try:
-            #         results_rec.append(res["results"][0][0])
-            #         # print(int(rec_msg["customId"]))
-            #         print(rec_msg["customId"])
-            #         print(res["origSpec"], "->", res["results"][0][0])
-            #     except Exception as e:
-            #         print(e)
-            #         print("no results in custom id " + rec_msg["customId"])
-            # self.out[int(rec_msg["customId"])] = results_rec
-            # if results_rec:
-            #     self.out[rec_msg["customId"]] = results_rec
-            # else:
-            #     print(f"No results for {rec_msg['customId']}")
-            # print (rec_msg["customId"], results_rec)
+            try:
+                for param, extractor in param_extraction_config.items():
+                    if self.config.get(param):
+                        try:
+                            param_value = extractor(rec_msg)
+                        except IndexError:
+                            param_value = np.nan
+                        results_rec.append(param_value)
+
+                exp_id = rec_msg.get("customId", {}).get('exp_no', None)
+                if exp_id is not None:
+                    self.out[exp_id] = results_rec
+
+            except Exception as e:
+                print(f"Error processing rec_msg: {e}")
+                continue
+
             received_results += 1
             # print("total received: " + str(received_results))
             if received_results == len(self.env_templates):
                 leave = True
+
+    def _extract_date(self, rec_msg, index):
+        try:
+            date_str = rec_msg["data"][index]['results'][0].get('Date', None)
+            return datetime.strptime(date_str, '%Y-%m-%d').timetuple().tm_yday if date_str else np.nan
+        except IndexError:
+            return np.nan
 
     def _create_env(self, ):
         """
@@ -332,7 +434,7 @@ class SpotSetup(object):
             # capture key errors and file not found errors
             except KeyError as e:
                 print(
-                    f"KeyError: {e}\n{"calibration_events"} not found in {sim_json}, pleas make sure the key in your sim.json matches!")
+                    f"KeyError: {e}\n{"calibration_events"} not found in {sim_json}, please make sure the key in your sim.json matches!")
             except FileNotFoundError as e:
                 print(
                     f"FileNotFoundError: {e}\nFile {sim_json} could not be found, double check the file name for the sim.json file!")
@@ -358,7 +460,7 @@ class SpotSetup(object):
 
             worksteps_copy = copy.deepcopy(worksteps)
             sowing_date = datetime.strptime(meta['Sowing'], '%d.%m.%Y')
-            worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d')  ## for start date, see line 294 in run-producer_1_1.py from agmip waterlogging###
+            worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d')
             harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
             worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
 
