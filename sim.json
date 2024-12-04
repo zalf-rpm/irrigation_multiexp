@@ -42,6 +42,7 @@
 				["PercolationRate|DPER", 15],
 				"NLeach|NLEA",
 				["Mois|SWC", [1, 20]],
+				["N", [1, 20]],
 				"Irrig",
 				"NFert"
 			]

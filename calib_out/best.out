@@ -5330,3 +5330,163 @@ MaxAssimilationRate: 29.7066
 CropSpecificMaxRootingDepth: 1.1825
 ******************************
 
+
+*** Final SPOTPY summary ***
+Total Duration: 0.5 seconds
+Total Repetitions: 3
+Minimal objective value: 1683.92
+Corresponding parameter setting:
+SpecificLeafArea_1: 0.001418
+SpecificLeafArea_2: 0.00255711
+SpecificLeafArea_3: 0.0029176
+SpecificLeafArea_4: 0.00180713
+SpecificLeafArea_5: 0.000999243
+SpecificLeafArea_6: 0.000917138
+StageTemperatureSum_1: 143.024
+StageTemperatureSum_2: 152.066
+StageTemperatureSum_3: 227.44
+StageTemperatureSum_4: 187.177
+StageTemperatureSum_5: 596.397
+StageTemperatureSum_6: 21.0626
+DroughtStressThreshold_1: 1.18011
+DroughtStressThreshold_2: 0.960975
+DroughtStressThreshold_3: 0.922892
+DroughtStressThreshold_4: 1.20615
+DroughtStressThreshold_5: 1.17113
+DroughtStressThreshold_6: 0.978474
+StageKcFactor_1: 0.372134
+StageKcFactor_2: 0.738347
+StageKcFactor_3: 1.34292
+StageKcFactor_4: 1.12017
+StageKcFactor_5: 0.953394
+StageKcFactor_6: 0.198113
+BaseDaylength_2: 5.0982
+BaseDaylength_3: 7.71668
+BaseDaylength_4: 6.97122
+DaylengthRequirement_2: 17.4146
+DaylengthRequirement_3: 18.0588
+DaylengthRequirement_4: 19.0119
+VernalisationRequirement_2: 26.832
+RootPenetrationRate: 0.000981594
+SpecificRootLength: 328.78
+MaxAssimilationRate: 20.5186
+CropSpecificMaxRootingDepth: 1.28384
+Maximal objective value: 2569.97
+Corresponding parameter setting:
+SpecificLeafArea_1: 0.00126128
+SpecificLeafArea_2: 0.00245438
+SpecificLeafArea_3: 0.00154108
+SpecificLeafArea_4: 0.00281031
+SpecificLeafArea_5: 0.00219264
+SpecificLeafArea_6: 0.00236547
+StageTemperatureSum_1: 126.004
+StageTemperatureSum_2: 384.677
+StageTemperatureSum_3: 229.248
+StageTemperatureSum_4: 159.401
+StageTemperatureSum_5: 345.659
+StageTemperatureSum_6: 26.9405
+DroughtStressThreshold_1: 0.999669
+DroughtStressThreshold_2: 0.989292
+DroughtStressThreshold_3: 0.958146
+DroughtStressThreshold_4: 0.983524
+DroughtStressThreshold_5: 0.781906
+DroughtStressThreshold_6: 0.552299
+StageKcFactor_1: 0.420232
+StageKcFactor_2: 0.536383
+StageKcFactor_3: 1.38839
+StageKcFactor_4: 1.23003
+StageKcFactor_5: 0.712758
+StageKcFactor_6: 0.238402
+BaseDaylength_2: 6.73386
+BaseDaylength_3: 5.86128
+BaseDaylength_4: 5.43117
+DaylengthRequirement_2: 21.7273
+DaylengthRequirement_3: 17.1485
+DaylengthRequirement_4: 24.3111
+VernalisationRequirement_2: 32.4006
+RootPenetrationRate: 0.00121226
+SpecificRootLength: 379.055
+MaxAssimilationRate: 29.6614
+CropSpecificMaxRootingDepth: 1.46089
+******************************
+
+
+*** Final SPOTPY summary ***
+Total Duration: 2.48 seconds
+Total Repetitions: 3
+Minimal objective value: 1534.65
+Corresponding parameter setting:
+SpecificLeafArea_1: 0.00217601
+SpecificLeafArea_2: 0.00137837
+SpecificLeafArea_3: 0.000911454
+SpecificLeafArea_4: 0.00164013
+SpecificLeafArea_5: 0.000964578
+SpecificLeafArea_6: 0.00280801
+StageTemperatureSum_1: 132.693
+StageTemperatureSum_2: 348.511
+StageTemperatureSum_3: 281.135
+StageTemperatureSum_4: 58.5735
+StageTemperatureSum_5: 206.084
+StageTemperatureSum_6: 25.7816
+DroughtStressThreshold_1: 1.29315
+DroughtStressThreshold_2: 0.809502
+DroughtStressThreshold_3: 0.742962
+DroughtStressThreshold_4: 1.22622
+DroughtStressThreshold_5: 0.920098
+DroughtStressThreshold_6: 1.0698
+StageKcFactor_1: 0.351821
+StageKcFactor_2: 0.539545
+StageKcFactor_3: 1.00022
+StageKcFactor_4: 1.02362
+StageKcFactor_5: 0.985546
+StageKcFactor_6: 0.252776
+BaseDaylength_2: 6.27632
+BaseDaylength_3: 5.91651
+BaseDaylength_4: 8.68586
+DaylengthRequirement_2: 19.0017
+DaylengthRequirement_3: 21.7133
+DaylengthRequirement_4: 21.5135
+VernalisationRequirement_2: 46.1827
+RootPenetrationRate: 0.0012475
+SpecificRootLength: 331.539
+MaxAssimilationRate: 29.0387
+CropSpecificMaxRootingDepth: 1.03658
+Maximal objective value: 2824.32
+Corresponding parameter setting:
+SpecificLeafArea_1: 0.00154714
+SpecificLeafArea_2: 0.00231984
+SpecificLeafArea_3: 0.000685601
+SpecificLeafArea_4: 0.00132485
+SpecificLeafArea_5: 0.00144506
+SpecificLeafArea_6: 0.00246174
+StageTemperatureSum_1: 56.3125
+StageTemperatureSum_2: 267.244
+StageTemperatureSum_3: 190.854
+StageTemperatureSum_4: 234.882
+StageTemperatureSum_5: 571.898
+StageTemperatureSum_6: 29.4453
+DroughtStressThreshold_1: 0.828936
+DroughtStressThreshold_2: 1.12434
+DroughtStressThreshold_3: 1.03542
+DroughtStressThreshold_4: 0.779691
+DroughtStressThreshold_5: 0.820552
+DroughtStressThreshold_6: 0.62146
+StageKcFactor_1: 0.418937
+StageKcFactor_2: 0.759925
+StageKcFactor_3: 1.25863
+StageKcFactor_4: 1.23659
+StageKcFactor_5: 0.98406
+StageKcFactor_6: 0.193088
+BaseDaylength_2: 6.8663
+BaseDaylength_3: 8.21769
+BaseDaylength_4: 8.93842
+DaylengthRequirement_2: 15.501
+DaylengthRequirement_3: 18.9393
+DaylengthRequirement_4: 24.1987
+VernalisationRequirement_2: 61.1932
+RootPenetrationRate: 0.000796342
+SpecificRootLength: 324.757
+MaxAssimilationRate: 25.7781
+CropSpecificMaxRootingDepth: 1.60867
+******************************
+

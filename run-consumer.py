@@ -99,9 +99,10 @@ def run_consumer(server=None, port=None):
                         sowing_date = vals["Date"]
 
                     swc_data = vals["SWC"]
+                    n_data = vals["N"]
                     row = [exp_no, vals["Crop"], vals["Date"], vals["Stage"], vals["NFert"], vals["Irrig"],
                            vals["Yield"], vals["AbBiom"], vals["LAI"], vals["TRANS"], vals["ETa"], vals["Roff"],
-                           vals["DPER"], vals["NLEA"]] + swc_data
+                           vals["DPER"], vals["NLEA"]] + swc_data + n_data
                     daily_writer.writerow(row)
 
             except Exception as e:

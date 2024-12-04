@@ -72,13 +72,56 @@ def run_producer(server=None, port=None):
     cumulative_depth = 0
     n_per_cm = 50  # Add 50 kg N for the first 50 cm of soil depth
 
+    # for _, row in soil_df.iterrows():
+    #     soil_name = row['Soil']
+    #     if soil_name != prev_soil_name:
+    #         prev_soil_name = soil_name
+    #         prev_depth_m = 0
+
+    #     current_depth_m = float(row['Depth']) / 100.0
+    #     thickness = round(current_depth_m - prev_depth_m, 1)
+    #     prev_depth_m = current_depth_m
+    #     cumulative_depth += thickness
+
+    #     # Calculate nitrate for the layer
+    #     if cumulative_depth <= 0.5:
+    #         nitrate = min(n_per_cm, thickness * 100)
+    #         n_per_cm -= nitrate
+    #     elif n_per_cm > 0:
+    #         nitrate = n_per_cm
+    #         n_per_cm = 0
+    #     else:
+    #         nitrate = 0.0
+
+    #     layer = {
+    #         "Thickness": [thickness, "m"],
+    #         "PoreVolume": [float(row['Pore_volume']), "m3/m3"] if pd.notnull(row['Pore_volume']) else [None, "m3/m3"],
+    #         "FieldCapacity": [float(row['Field_capacity']), "m3/m3"] if pd.notnull(row['Field_capacity']) else
+    #         [None, "m3/m3"],
+    #         "PermanentWiltingPoint": [float(row['Wilting_point']), "m3/m3"] if pd.notnull(row['Wilting_point']) else
+    #         [None, "m3/m3"],
+    #         "SoilRawDensity": [float(row['Raw_density'])*1000 , "kg/m3"] if pd.notnull(row['Raw_density']) else #Do not multiply soil density by *1000!!#
+    #         print("Raw_density is missing for soil: ", soil_name),
+    #         "SoilOrganicCarbon": [float(row['Corg']), "%"] if pd.notnull(row['Corg']) else print("Corg is missing for "
+    #                                                                                              "soil: ", soil_name),
+    #         "Clay": [float(row['Clay']), "m3/m3"],
+    #         "Sand": [float(row['Sand']), "m3/m3"],
+    #         "Silt": [float(row['Silt']), "m3/m3"],
+    #         "pH": float(row['pH']) if pd.notnull(row['pH']) else None,
+    #         "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
+    #         "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
+    #         "SoilMoisturePercentFC": [50.0, "%"],
+    #         #"SoilNitrate": [nitrate, "kg/ha"],
+    #     }
+    #     soil_profiles[soil_name].append(layer)
+
+    #Try a simplified soil approach #    
     for _, row in soil_df.iterrows():
         soil_name = row['Soil']
         if soil_name != prev_soil_name:
             prev_soil_name = soil_name
             prev_depth_m = 0
-
-        current_depth_m = float(row['Depth']) / 100.0
+        current_depth_m = float(row['Depth'])/100.0
         thickness = round(current_depth_m - prev_depth_m, 1)
         prev_depth_m = current_depth_m
         cumulative_depth += thickness
@@ -95,25 +138,16 @@ def run_producer(server=None, port=None):
 
         layer = {
             "Thickness": [thickness, "m"],
-            "PoreVolume": [float(row['Pore_volume']), "m3/m3"] if pd.notnull(row['Pore_volume']) else [None, "m3/m3"],
-            "FieldCapacity": [float(row['Field_capacity']), "m3/m3"] if pd.notnull(row['Field_capacity']) else
-            [None, "m3/m3"],
-            "PermanentWiltingPoint": [float(row['Wilting_point']), "m3/m3"] if pd.notnull(row['Wilting_point']) else
-            [None, "m3/m3"],
-            "SoilRawDensity": [float(row['Raw_density']) * 1000.0, "kg/m3"] if pd.notnull(row['Raw_density']) else
+            "SoilRawDensity": [float(row['Raw_density'])*1000 , "kg/m3"] if pd.notnull(row['Raw_density']) else #Do not multiply soil density by *1000!!#
             print("Raw_density is missing for soil: ", soil_name),
             "SoilOrganicCarbon": [float(row['Corg']), "%"] if pd.notnull(row['Corg']) else print("Corg is missing for "
                                                                                                  "soil: ", soil_name),
             "Clay": [float(row['Clay']), "m3/m3"],
             "Sand": [float(row['Sand']), "m3/m3"],
             "Silt": [float(row['Silt']), "m3/m3"],
-            "pH": float(row['pH']) if pd.notnull(row['pH']) else None,
-            "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
-            "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
-            "SoilMoisturePercentFC": [50.0, "%"],
-            "SoilNitrate": [nitrate, "kg/ha"],
+            "SoilNitrate": [nitrate/10, "kg/ha"],
         }
-        soil_profiles[soil_name].append(layer)
+        soil_profiles[soil_name].append(layer)        
 
     # View all soil profiles
     # for soil_name, layers in soil_profiles.items():
@@ -173,8 +207,8 @@ def run_producer(server=None, port=None):
                 ['ATB_Marquart',
                  'FI_Dahlhausen',
                  'HUB_Thyrow_D1',
-                 #'TI_Braunschweig_FACE',
-                 'ZALF_Muencheberg_V4',
+                 'TI_Braunschweig_FACE',
+                 #'ZALF_Muencheberg_V4',
                  'JKI_Braunschweig_Rainshelter',
                  'UTP_Bydgoszcz'
                  ]):

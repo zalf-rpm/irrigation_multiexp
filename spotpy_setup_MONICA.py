@@ -477,7 +477,7 @@ class SpotSetup(object):
                     tillage_event = copy.deepcopy(exp_no_to_management[exp_id][date])
                     tillage_date = datetime.strptime(tillage_event["date"], '%Y-%m-%d')
                     # Only add tillage events happening after sowing and before harvest
-                    # This would change if I include a spin-up
+                    # This would change if I include a spin-up, potentially remove
                     if tillage_date >= sowing_date and tillage_date <= harvest_date:
                         worksteps_copy.insert(-1, tillage_event)
 
