@@ -41,6 +41,7 @@ def run_producer(server=None, port=None):
         "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
         "monica_path_to_climate_dir": "C:/Users/palka/GitHub/irrigation_multiexp/data",
+        # "monica_path_to_climate_dir": r"C:\Users\escueta\PycharmProjects\irrigation_multiexp\data",
         "path_to_data_dir": "./data/",
         "path_to_out": "out/",
     }
@@ -69,8 +70,6 @@ def run_producer(server=None, port=None):
     soil_profiles = defaultdict(list)
     prev_depth_m = 0
     prev_soil_name = None
-    cumulative_depth = 0
-    n_per_cm = 50  # Add 50 kg N for the first 50 cm of soil depth
 
     # for _, row in soil_df.iterrows():
     #     soil_name = row['Soil']
@@ -81,17 +80,6 @@ def run_producer(server=None, port=None):
     #     current_depth_m = float(row['Depth']) / 100.0
     #     thickness = round(current_depth_m - prev_depth_m, 1)
     #     prev_depth_m = current_depth_m
-    #     cumulative_depth += thickness
-
-    #     # Calculate nitrate for the layer
-    #     if cumulative_depth <= 0.5:
-    #         nitrate = min(n_per_cm, thickness * 100)
-    #         n_per_cm -= nitrate
-    #     elif n_per_cm > 0:
-    #         nitrate = n_per_cm
-    #         n_per_cm = 0
-    #     else:
-    #         nitrate = 0.0
 
     #     layer = {
     #         "Thickness": [thickness, "m"],
@@ -111,7 +99,6 @@ def run_producer(server=None, port=None):
     #         "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
     #         "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
     #         "SoilMoisturePercentFC": [50.0, "%"],
-    #         #"SoilNitrate": [nitrate, "kg/ha"],
     #     }
     #     soil_profiles[soil_name].append(layer)
 
@@ -124,17 +111,6 @@ def run_producer(server=None, port=None):
         current_depth_m = float(row['Depth'])/100.0
         thickness = round(current_depth_m - prev_depth_m, 1)
         prev_depth_m = current_depth_m
-        cumulative_depth += thickness
-
-        # Calculate nitrate for the layer
-        if cumulative_depth <= 0.5:
-            nitrate = min(n_per_cm, thickness * 100)
-            n_per_cm -= nitrate
-        elif n_per_cm > 0:
-            nitrate = n_per_cm
-            n_per_cm = 0
-        else:
-            nitrate = 0.0
 
         layer = {
             "Thickness": [thickness, "m"],
@@ -145,9 +121,21 @@ def run_producer(server=None, port=None):
             "Clay": [float(row['Clay']), "m3/m3"],
             "Sand": [float(row['Sand']), "m3/m3"],
             "Silt": [float(row['Silt']), "m3/m3"],
-            "SoilNitrate": [nitrate/10, "kg/ha"],
+            # "SoilNitrate": [0.0, "kg/ha"],
         }
-        soil_profiles[soil_name].append(layer)        
+        soil_profiles[soil_name].append(layer)
+
+    # Distribute nitrate across layers
+    # for soil_name, layers in soil_profiles.items():
+    #     n_per_cm = 50
+    #
+    #     for layer in layers:
+    #         thickness = layer["Thickness"][0]
+    #         nitrate = min(n_per_cm, thickness * 100)
+    #         n_per_cm -= nitrate
+    #         if n_per_cm < 0:
+    #             nitrate = 0.0
+    #         layer["SoilNitrate"] = [nitrate, "kg/ha"]
 
     # View all soil profiles
     # for soil_name, layers in soil_profiles.items():

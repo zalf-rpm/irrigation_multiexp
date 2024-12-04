@@ -59,10 +59,11 @@ def run_consumer(server=None, port=None):
         ])
 
         swc_header_row = [f"SWC_{i}" for i in range(1, 21)]
+        n_header_row = [f"N_{i}" for i in range(1, 21)]
         daily_writer.writerow([
             "Exp", "Crop", "Date", "ZDPH", "NFert", "Irrig", "PYield", "AbBiom", "LAI", "TRANS", "ETa", "Roff", "DPER",
             "NLEA"
-        ] + swc_header_row)
+        ] + swc_header_row + n_header_row)
 
         no_of_exps_to_receive = None
         no_of_exps_received = 0
