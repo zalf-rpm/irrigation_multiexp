@@ -6,29 +6,30 @@ import spotpy
 import spotpy_setup_MONICA
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 
 # Define experiments (=crops), parameters to calibrate, and repetitions.
 
-crop_sim_site_MAP = "crop_sim_site_MAP_WW.csv"
-calib_params_df = pd.read_csv("calibratethese_ww.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_WW_noReplicates.csv"
+# calib_params_df = pd.read_csv("calibratethese_ww_bio.csv", delimiter=";")
 
-# crop_sim_site_MAP = "crop_sim_site_MAP_WB.csv"
-# calib_params_df = pd.read_csv("calibratethese_wb.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_WB_noReplicates.csv"
+# calib_params_df = pd.read_csv("calibratethese_wb_bio.csv", delimiter=";")
 
-#crop_sim_site_MAP = "crop_sim_site_MAP_SB.csv" # SB doesn't work yet, as data from Bydgoszcz is incomplete.
-#calib_params_df = pd.read_csv("calibratethese_sb.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_SB.csv" # SB doesn't work yet, as data from Bydgoszcz is incomplete.
+# calib_params_df = pd.read_csv("calibratethese_sb_bio.csv", delimiter=";")
 
-# crop_sim_site_MAP = "crop_sim_site_MAP_WR.csv"
-# calib_params_df = pd.read_csv("calibratethese_wr.csv", delimiter=";")
+crop_sim_site_MAP = "crop_sim_site_MAP_WR_noReplicates_corrected.csv"
+calib_params_df = pd.read_csv("calibratethese_wr_bio.csv", delimiter=";")
 
-#crop_sim_site_MAP = "crop_sim_site_MAP_SM.csv"
-#calib_params_df = pd.read_csv("calibratethese_sm.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_SM_noReplicates.csv"
+# calib_params_df = pd.read_csv("calibratethese_sm_bio.csv", delimiter=";")
 
 #crop_sim_site_MAP = "crop_sim_site_MAP_SW.csv" # SW doesn't work yet, as data from Bydgoszcz is incomplete.
 #calib_params_df = pd.read_csv("calibratethese_sw.csv", delimiter=";")
 
-rep = 3 # 5000  # initial number was 10 # change to a reasonable value
+rep = 2 # DO NOT INCREASE BEYOND 500!!!#
 
 
 def add_identity(axes, *line_args, **line_kwargs):
@@ -79,7 +80,8 @@ spot_setup = spotpy_setup_MONICA.SpotSetup(calib_params_df,
 # Select maximum number of repetitions
 
 # Set up the sampler with the model above
-sampler = spotpy.algorithms.mc(spot_setup, dbname='calib_out/SCEUA_monica_results', dbformat='csv')
+# sampler = spotpy.algorithms.mc(spot_setup, dbname='calib_out/SCEUA_monica_results', dbformat='csv') #This is the original#
+sampler = spotpy.algorithms.sceua(spot_setup, dbname='calib_out/SCEUA_monica_results', dbformat='csv') #This is from agmip#
 
 # Run the sampler to produce the parameter distribution
 # and identify optimal parameters based
@@ -135,7 +137,7 @@ with open(path_to_best_out_file, "a") as _:
 results = spotpy.analyser.load_csv_results("calib_out/SCEUA_monica_results")
 
 fig = plt.figure(1, figsize=(9, 5))
-plt.plot(results['like1'])
+plt.plot(results['like1'], "r+")
 plt.show()
 plt.ylabel('RMSE')
 plt.xlabel('Iteration')
@@ -152,4 +154,21 @@ ax.scatter(spot_setup.evaluation(), best_simulation, c=".3")
 add_identity(ax, color='r', ls='--')
 plt.xlabel('Obs')
 plt.ylabel('Sim')
+xlims = ax.get_xlim()
+ylims = ax.get_ylim()
+lims = [min(xlims[0], ylims[0]), max(xlims[1], ylims[1])]
+ax.set_xlim(lims)
+ax.set_ylim(lims)
+ax.set_aspect('equal', adjustable='box')
 fig.savefig('calib_out/SCEUA_best_modelrun.png', dpi=300)
+
+# fig = plt.figure(figsize=(16, 9))
+# ax = plt.subplot(1, 1, 1)
+# ax.scatter(spot_setup.evaluation(), best_simulation, c=".3")
+# add_identity(ax, color='r', ls='--')
+# coefficients = np.polyfit(spot_setup.evaluation(), best_simulation, 1)
+# trendline = np.poly1d(coefficients)
+# plt.plot(spot_setup.evaluation(), trendline(spot_setup.evaluation()), color="blue")
+# plt.xlabel("Obs")
+# plt.ylabel("Sim")
+# plt.savefig("calib_out/SCEUA_best_modelrun_with_trendline.png", dpi=300)
