@@ -506,8 +506,8 @@ class SpotSetup(object):
         soil_profiles = defaultdict(list)
         prev_depth_m = 0
         prev_soil_name = None
-        cumulative_depth = 0
-        n_per_cm = 50  # Add 50 kg N for the first 50 cm of soil depth
+        # cumulative_depth = 0
+        # n_per_cm = 50  # Add 50 kg N for the first 50 cm of soil depth
 
         for _, row in soil_df.iterrows():
             soil_name = row['Soil']
@@ -518,26 +518,26 @@ class SpotSetup(object):
             current_depth_m = float(row['Depth']) / 100.0
             thickness = round(current_depth_m - prev_depth_m, 1)
             prev_depth_m = current_depth_m
-            cumulative_depth += thickness
+            # cumulative_depth += thickness
 
             # Calculate nitrate for the layer
-            if cumulative_depth <= 0.5:
-                nitrate = min(n_per_cm, thickness * 100)
-                n_per_cm -= nitrate
-            elif n_per_cm > 0:
-                nitrate = n_per_cm
-                n_per_cm = 0
-            else:
-                nitrate = 0.0
+            # if cumulative_depth <= 0.5:
+            #     nitrate = min(n_per_cm, thickness * 100)
+            #     n_per_cm -= nitrate
+            # elif n_per_cm > 0:
+            #     nitrate = n_per_cm
+            #     n_per_cm = 0
+            # else:
+            #     nitrate = 0.0
 
             layer = {
                 "Thickness": [thickness, "m"],
-                "PoreVolume": [float(row['Pore_volume']), "m3/m3"] if pd.notnull(row['Pore_volume']) else [None,
-                                                                                                           "m3/m3"],
-                "FieldCapacity": [float(row['Field_capacity']), "m3/m3"] if pd.notnull(row['Field_capacity']) else
-                [None, "m3/m3"],
-                "PermanentWiltingPoint": [float(row['Wilting_point']), "m3/m3"] if pd.notnull(row['Wilting_point']) else
-                [None, "m3/m3"],
+                # "PoreVolume": [float(row['Pore_volume']), "m3/m3"] if pd.notnull(row['Pore_volume']) else [None,
+                #                                                                                            "m3/m3"],
+                # "FieldCapacity": [float(row['Field_capacity']), "m3/m3"] if pd.notnull(row['Field_capacity']) else
+                # [None, "m3/m3"],
+                # "PermanentWiltingPoint": [float(row['Wilting_point']), "m3/m3"] if pd.notnull(row['Wilting_point']) else
+                # [None, "m3/m3"],
                 "SoilRawDensity": [float(row['Raw_density']) * 1000.0, "kg/m3"] if pd.notnull(row['Raw_density']) else
                 print("Raw_density is missing for soil: ", soil_name),
                 "SoilOrganicCarbon": [float(row['Corg']), "%"] if pd.notnull(row['Corg']) else print(
@@ -546,11 +546,11 @@ class SpotSetup(object):
                 "Clay": [float(row['Clay']), "m3/m3"],
                 "Sand": [float(row['Sand']), "m3/m3"],
                 "Silt": [float(row['Silt']), "m3/m3"],
-                "pH": float(row['pH']) if pd.notnull(row['pH']) else None,
-                "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
-                "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
-                "SoilMoisturePercentFC": [50.0, "%"],
-                "SoilNitrate": [nitrate, "kg/ha"],
+                # "pH": float(row['pH']) if pd.notnull(row['pH']) else None,
+                # "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
+                # "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
+                # "SoilMoisturePercentFC": [50.0, "%"],
+                # "SoilNitrate": [nitrate, "kg/ha"],
             }
             soil_profiles[soil_name].append(layer)
         return soil_profiles
