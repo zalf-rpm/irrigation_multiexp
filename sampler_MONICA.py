@@ -172,3 +172,36 @@ fig.savefig('calib_out/SCEUA_best_modelrun.png', dpi=300)
 # plt.xlabel("Obs")
 # plt.ylabel("Sim")
 # plt.savefig("calib_out/SCEUA_best_modelrun_with_trendline.png", dpi=300)
+
+
+# Add observed data to the calibration results
+results_file = "calib_out/SCEUA_monica_results.csv"
+updated_results_file = "calib_out/SCEUA_monica_results_with_observed.csv"
+
+results_df = pd.read_csv(results_file)
+
+# Extract observed data from spot_setup.evaluation()
+observed_data = spot_setup.evaluation()
+
+# Get all simulation columns
+simulation_columns = [col for col in results_df.columns if col.startswith("simulation")]
+
+# Ensure observed data matches the number of simulations
+if len(observed_data) != len(simulation_columns):
+    raise ValueError(f"Mismatch: Length of observed data ({len(observed_data)}) does not match no. of simulation columns "
+                     f"({len(simulation_columns)})!")
+
+# Repeat observed data for each row in results_df
+num_rows = len(results_df)
+observed_data_repeated = np.tile(observed_data, (num_rows, 1))
+
+# Create a DataFrame for observed data
+observed_df = pd.DataFrame(
+    observed_data_repeated,
+    columns=[f"observed_{i}" for i in range(len(observed_data))]
+)
+
+# Concatenate the observed data to the results DataFrame
+results_df = pd.concat([results_df, observed_df], axis=1)
+
+results_df.to_csv(updated_results_file, index=False)
