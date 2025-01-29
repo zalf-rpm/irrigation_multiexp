@@ -28,8 +28,8 @@
 			"is-winter-crop": false,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/maize.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/maize/silage-maize.json"],
-				"species": ["include-from-file", "monica-parameters/crops/maize.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/maize/silage-maize_bs_dwd_pheno.json"],
+				"species": ["include-from-file", "monica-parameters/crops/maize_klimertrag.json"]
 			}
 		},
 		"SB": {
