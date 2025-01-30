@@ -450,8 +450,8 @@ class SpotSetup(object):
             env_template["params"]["siteParameters"]["HeightNN"] = float(meta['Elevation'])
             env_template["params"]["siteParameters"]["Latitude"] = float(meta['Lat'])
 
-            if meta['CO2'] != 'no_co2' and not pd.isna(meta['CO2']):
-                env_template["params"]["userEnvironmentParameters"]["AtmosphericCO2"] = float(meta['CO2'])
+            env_template["params"]["userEnvironmentParameters"]["AtmosphericCO2"] = float(meta['CO2']) \
+                if not 'no_co2' in meta['CO2'] and not pd.isna(meta['CO2']) else 0
 
             # complete crop rotation
             dates = set()
