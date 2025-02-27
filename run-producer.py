@@ -40,7 +40,7 @@ def run_producer(server=None, port=None):
         "sim.json": os.path.join(os.path.dirname(__file__), "sim.json"),
         "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
-        "monica_path_to_climate_dir": "C:/Users/palka/GitHub/irrigation_multiexp/data",
+        "monica_path_to_climate_dir": "C:/Users/senders/Documents/monica_win64_3.6.30/projects/irrigation_multiexp/data",
         # "monica_path_to_climate_dir": r"C:\Users\escueta\PycharmProjects\irrigation_multiexp\data",
         "path_to_data_dir": "./data/",
         "path_to_out": "out/",
@@ -70,39 +70,7 @@ def run_producer(server=None, port=None):
     soil_profiles = defaultdict(list)
     prev_depth_m = 0
     prev_soil_name = None
-
-    # for _, row in soil_df.iterrows():
-    #     soil_name = row['Soil']
-    #     if soil_name != prev_soil_name:
-    #         prev_soil_name = soil_name
-    #         prev_depth_m = 0
-
-    #     current_depth_m = float(row['Depth']) / 100.0
-    #     thickness = round(current_depth_m - prev_depth_m, 1)
-    #     prev_depth_m = current_depth_m
-
-    #     layer = {
-    #         "Thickness": [thickness, "m"],
-    #         "PoreVolume": [float(row['Pore_volume']), "m3/m3"] if pd.notnull(row['Pore_volume']) else [None, "m3/m3"],
-    #         "FieldCapacity": [float(row['Field_capacity']), "m3/m3"] if pd.notnull(row['Field_capacity']) else
-    #         [None, "m3/m3"],
-    #         "PermanentWiltingPoint": [float(row['Wilting_point']), "m3/m3"] if pd.notnull(row['Wilting_point']) else
-    #         [None, "m3/m3"],
-    #         "SoilRawDensity": [float(row['Raw_density'])*1000 , "kg/m3"] if pd.notnull(row['Raw_density']) else #Do not multiply soil density by *1000!!#
-    #         print("Raw_density is missing for soil: ", soil_name),
-    #         "SoilOrganicCarbon": [float(row['Corg']), "%"] if pd.notnull(row['Corg']) else print("Corg is missing for "
-    #                                                                                              "soil: ", soil_name),
-    #         "Clay": [float(row['Clay']), "m3/m3"],
-    #         "Sand": [float(row['Sand']), "m3/m3"],
-    #         "Silt": [float(row['Silt']), "m3/m3"],
-    #         "pH": float(row['pH']) if pd.notnull(row['pH']) else None,
-    #         "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
-    #         "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
-    #         "SoilMoisturePercentFC": [50.0, "%"],
-    #     }
-    #     soil_profiles[soil_name].append(layer)
-
-    #Try a simplified soil approach #    
+  
     for _, row in soil_df.iterrows():
         soil_name = row['Soil']
         if soil_name != prev_soil_name:
@@ -114,7 +82,7 @@ def run_producer(server=None, port=None):
 
         layer = {
             "Thickness": [thickness, "m"],
-            "SoilRawDensity": [float(row['Raw_density'])*1000 , "kg/m3"] if pd.notnull(row['Raw_density']) else #Do not multiply soil density by *1000!!#
+            "SoilRawDensity": [float(row['Raw_density'])*1000 , "kg/m3"] if pd.notnull(row['Raw_density']) else
             print("Raw_density is missing for soil: ", soil_name),
             "SoilOrganicCarbon": [float(row['Corg']), "%"] if pd.notnull(row['Corg']) else print("Corg is missing for "
                                                                                                  "soil: ", soil_name),
@@ -125,26 +93,8 @@ def run_producer(server=None, port=None):
         }
         soil_profiles[soil_name].append(layer)
 
-    # Distribute nitrate across layers
-    # for soil_name, layers in soil_profiles.items():
-    #     n_per_cm = 50
-    #
-    #     for layer in layers:
-    #         thickness = layer["Thickness"][0]
-    #         nitrate = min(n_per_cm, thickness * 100)
-    #         n_per_cm -= nitrate
-    #         if n_per_cm < 0:
-    #             nitrate = 0.0
-    #         layer["SoilNitrate"] = [nitrate, "kg/ha"]
-
-    # View all soil profiles
-    # for soil_name, layers in soil_profiles.items():
-    #     print(soil_name)
-    #     for layer in layers:
-    #         print(layer)
-
     # Read metadata and management data
-    metadata_df = pd.read_csv(f"{config['path_to_data_dir']}/Meta.csv", sep=';')
+    metadata_df = pd.read_csv(f"{config['path_to_data_dir']}/Meta.csv", sep=';') #This is the path to the "Meta" file, which connects everything
     fert_min_df = pd.read_csv(f"{config['path_to_data_dir']}/Fertilisation_min.csv", sep=';')
     irrig_df = pd.read_csv(f"{config['path_to_data_dir']}/Irrigation.csv", sep=';')
     till_df = pd.read_csv(f"{config['path_to_data_dir']}/Management.csv", sep=';')
@@ -174,7 +124,7 @@ def run_producer(server=None, port=None):
         irrig_temp["amount"][0] = float(row['Amount_mm'])
         exp_no_to_irrigation[row['Experiment']][irrig_temp["date"]] = irrig_temp
 
-    for _, row in merged_df_till.iterrows():
+    for _, row in merged_df_till.iterrows(): #Management refers to soil management (tillage etc.)
         if pd.isna(row['Management']) or row['Management'] == 'no_manag':
             continue
         till_temp = copy.deepcopy(till_template)
@@ -185,12 +135,13 @@ def run_producer(server=None, port=None):
     exp_no_to_meta = metadata_df.set_index('Experiment').T.to_dict('dict')
     no_of_exps = 0
 
+    env_template = None
     for exp_no, meta in exp_no_to_meta.items():
         # Skip experiments with these crops
         if meta['Crop'] in ['PO', 'WC', 'ZU', 'TR']:
             continue
-        # Crops for simulation: WW, WB, SB, WR, SM, SW (no data fow SW (yet))
-        if (meta['Crop'] != 'WW' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
+        # Crops for simulation: WW, WR, SM, SB #WW:winter wheat, WR: winter rye, SM: silage maize, SB: spring barley#
+        if (meta['Crop'] != 'SB' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
         #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in,
                 ['ATB_Marquart',
                  'FI_Dahlhausen',
@@ -201,7 +152,7 @@ def run_producer(server=None, port=None):
                  'UTP_Bydgoszcz'
                  ]):
             continue
-        #nur der auskommentierte Standort wird berücksichtigt
+        # comment out experimental locations to be considered
 
         # Set the crop based on the experiment
         crop_json["cropRotation"][2] = meta['Crop']
@@ -265,11 +216,12 @@ def run_producer(server=None, port=None):
         # with open(f"out/env_template_{exp_no}.json", "w") as _:
         #     json.dump(env_template, _, indent=4)
 
-    # send done message
+    #if env_template:
+        # send done message
     env_template["customId"] = {
-        "no_of_exps": no_of_exps,
-        "nodata": True,
-        "soil_name": meta['Soil']
+            "no_of_exps": no_of_exps,
+            "nodata": True,
+            "soil_name": meta['Soil']
     }
     socket.send_json(env_template)
     print(f"{os.path.basename(__file__)} done")
