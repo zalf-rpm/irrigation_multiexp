@@ -38,7 +38,7 @@ def run_producer(server=None, port=None):
         "server-port": port if port else "6666",
         "server": server if server else "localhost",
         "sim.json": os.path.join(os.path.dirname(__file__), "sim-muencheberg.json"),
-        "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
+        "crop.json": os.path.join(os.path.dirname(__file__), "crop-muencheberg.json"),
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
         "monica_path_to_climate_dir": "C:/Users/senders/Documents/monica_win64_3.6.30/projects/irrigation_multiexp/data",
         # "monica_path_to_climate_dir": r"C:\Users\escueta\PycharmProjects\irrigation_multiexp\data",

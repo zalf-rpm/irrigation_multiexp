@@ -3,7 +3,8 @@
 	"site.json": "",
 	"crop.json": "",
 	"climate.csv-options": {
-		"start-date": "0001-04-03",
+		"start-date": "1992-01-01",
+		"end-date": "2022-12-31",
 		"csv-separator": ";",
 		"no-of-climate-file-header-lines": 1,
 		"header-to-acd-names": {
@@ -29,7 +30,7 @@
 			"csv-separator": ","
 		},
 		"events": [
-			{"start": "1992-01-01", "end": "2022-12-31"}, [
+			"daily", [
 				"Date",
 				"Crop",
 				"Stage",
@@ -41,6 +42,17 @@
 				"RunOff|Roff",
 				["PercolationRate|DPER", 15],
 				"NLeach|NLEA",
+				"Nresid",
+				["AOMf", [1,2]],
+				"AOMs",
+				"SMBf",
+				"SMBs",
+				"SOMf",
+				"SOMs",
+				["SOC|SOC_top20", [1, 2, "SUM"]],
+				["SOC|SOC_20to40", [3, 4, "SUM"]],
+				["SOC|SOC_40to60", [5, 6, "SUM"]],
+				["SOC|SOC_total", [1, 6, "SUM"]],
 				["Mois|SWC", [1, 20]],
 				["N", [1, 20]],
 				"Irrig",
