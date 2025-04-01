@@ -157,7 +157,7 @@ def run_producer(server=None, port=None):
         original_crop_json = copy.deepcopy(crop_json)
         original_crop_rotation = original_crop_json.get("cropRotationTemplates", {}).get(meta["Crop"], [])
         original_harvest_step = None
-        for rotation in original_crop_json:
+        for rotation in original_crop_rotation:
             for ws in rotation["worksteps"]:
                 if ws["type"].lower() == "harvest":
                     original_harvest_step = ws
