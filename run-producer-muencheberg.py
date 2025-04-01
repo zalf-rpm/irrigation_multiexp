@@ -155,6 +155,13 @@ def run_producer(server=None, port=None):
         # comment out experimental locations to be considered
 
         original_crop_json = copy.deepcopy(crop_json)
+        original_crop_rotation = original_crop_json.get("cropRotationTemplates", {}).get(meta["Crop"], [])
+        original_harvest_step = None
+        for rotation in original_crop_json:
+            for ws in rotation["worksteps"]:
+                if ws["type"].lower() == "harvest":
+                    original_harvest_step = ws
+                    break
 
         temp_env = monica_io3.create_env_json_from_json_config({
             "crop": original_crop_json,
@@ -216,6 +223,10 @@ def run_producer(server=None, port=None):
                 "type": "Harvest",
                 "date": harvest.strftime('%Y-%m-%d')
             }
+            if original_harvest_step:
+                for key in ["exported", "leaf", "shoot", "fruit", "struct", "sugar"]:
+                    if key in original_harvest_step:
+                        harvest_step[key] = original_harvest_step[key]
 
             rotation = [sowing_step] + management_steps + [harvest_step]
             crop_json["cropRotation"].append({
@@ -228,9 +239,6 @@ def run_producer(server=None, port=None):
             "sim": sim_json,
             "climate": ""  # climate_csv
         })
-
-        env_template["params"]["simStartDate"] = "1992-01-01"
-        env_template["params"]["simEndDate"] = "2022-12-31"
 
         env_template["csvViaHeaderOptions"] = sim_json["climate.csv-options"]
         env_template["pathToClimateCSV"] = f"{config['monica_path_to_climate_dir']}/{meta['Weather']}.csv"
