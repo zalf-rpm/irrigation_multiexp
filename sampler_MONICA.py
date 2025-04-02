@@ -11,23 +11,23 @@ import numpy as np
 
 # Define experiments (=crops), parameters to calibrate, and repetitions.
 
-# crop_sim_site_MAP = "crop_sim_site_MAP_WW_noReplicates.csv"
-# calib_params_df = pd.read_csv("calibratethese_ww_bio.csv", delimiter=";")
+crop_sim_site_MAP = "crop_sim_site_MAP_WW_final.csv"
+calib_params_df = pd.read_csv("calibratethese_ww_bio.csv", delimiter=";")
 
-# crop_sim_site_MAP = "crop_sim_site_MAP_WB_noReplicates.csv"
+# crop_sim_site_MAP = "crop_sim_site_MAP_WB_final.csv"
 # calib_params_df = pd.read_csv("calibratethese_wb_bio.csv", delimiter=";")
 
-# crop_sim_site_MAP = "crop_sim_site_MAP_SB.csv" # SB doesn't work yet, as data from Bydgoszcz is incomplete.
+# crop_sim_site_MAP = "crop_sim_site_MAP_SB_final.csv" 
 # calib_params_df = pd.read_csv("calibratethese_sb_bio.csv", delimiter=";")
 
-crop_sim_site_MAP = "crop_sim_site_MAP_WR_noReplicates_corrected.csv"
-calib_params_df = pd.read_csv("calibratethese_wr_bio.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_WR_final_corrected.csv"
+# calib_params_df = pd.read_csv("calibratethese_wr_bio.csv", delimiter=";")
 
-# crop_sim_site_MAP = "crop_sim_site_MAP_SM_noReplicates.csv"
+# crop_sim_site_MAP = "crop_sim_site_MAP_SM_final.csv"
 # calib_params_df = pd.read_csv("calibratethese_sm_bio.csv", delimiter=";")
 
-#crop_sim_site_MAP = "crop_sim_site_MAP_SW.csv" # SW doesn't work yet, as data from Bydgoszcz is incomplete.
-#calib_params_df = pd.read_csv("calibratethese_sw.csv", delimiter=";")
+# crop_sim_site_MAP = "crop_sim_site_MAP_SW_final.csv" 
+# calib_params_df = pd.read_csv("calibratethese_sw_bio.csv", delimiter=";")
 
 rep = 2 # DO NOT INCREASE BEYOND 500!!!#
 
@@ -66,7 +66,7 @@ crop_site_map_df = pd.read_csv(os.path.join(basepath, crop_sim_site_MAP), delimi
 
 # read observations for which the likelihood of parameter space is calculated
 # Read the observations from the measurements file.
-measurements_df = pd.read_csv("Measurements.csv", delimiter=";", skiprows=[1, 2])
+measurements_df = pd.read_csv("Measurements_final.csv", delimiter=";", skiprows=[1, 2])
 
 # Here, MONICA is initialized and a producer is started:
 # Arguments are: Parameters, Sites, Observations
@@ -172,7 +172,6 @@ fig.savefig('calib_out/SCEUA_best_modelrun.png', dpi=300)
 # plt.xlabel("Obs")
 # plt.ylabel("Sim")
 # plt.savefig("calib_out/SCEUA_best_modelrun_with_trendline.png", dpi=300)
-
 
 # Add observed data to the calibration results
 results_file = "calib_out/SCEUA_monica_results.csv"

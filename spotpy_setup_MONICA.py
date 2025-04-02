@@ -14,13 +14,6 @@ import zmq
 import monica_io3
 from soil_io3 import sand_and_clay_to_ka5_texture, sand_and_clay_to_lambda
 
-#myStage=5
-#myTarget="AbBiom" #Biomass_dm
-#myTarget="AbBiomNc" #Biomass_dm_nconc
-#myTarget="OrgBiom/Fruit" #Grain_dm
-#myTarget="OrgBiom/Shoot" #Stem_dm
-
-
 class SpotSetup(object):
     """
     This class is a setup for spotpy to calibrate MONICA model.
@@ -82,7 +75,7 @@ class SpotSetup(object):
             "Emergence": False,
             "Stem_elongation": False,
             "Anthesis": False,
-            "Maturity": True,
+            "Maturity": False,
             "SWAT_0-30_Sowing": False,
             "SWAT_30-60_Sowing": False,
             "SWAT_60-90_Sowing": False,
@@ -178,13 +171,23 @@ class SpotSetup(object):
             # create a copy of the environment template
             current_env = env.copy()
 
-            SpecificLeafArea = {}
-            StageTemperatureSum = {}
+            #Turn off if needed#
+            # StageTemperatureSum = {}
+            # BaseDaylength = {}
+            # DaylengthRequirement = {}
+            # VernalisationRequirement = {} # only for winter crops#
+
+            #Turn off if needed#
+            # StageKcFactor = {}
+            # CropSpecificMaxRootingDepth = vector["CropSpecificMaxRootingDepth"]
+            # RootPenetrationRate = vector["RootPenetrationRate"]
+            # SpecificRootLength = vector["SpecificRootLength"]
             DroughtStressThreshold = {}
-            StageKcFactor = {}
-            BaseDaylength = {}
-            DaylengthRequirement = {}
-            VernalisationRequirement = {}
+
+            #MaxAssimilationRate = vector["MaxAssimilationRate"]
+            #SpecificLeafArea = {}       
+            
+            
             for i, name in enumerate(vector.name): #That is for the stage-specific values.
                 if name.startswith("SpecificLeafArea_"):
                     SpecificLeafArea[int(name.split('_')[1]) - 1] = vector[i]
@@ -201,37 +204,38 @@ class SpotSetup(object):
                 if name.startswith("VernalisationRequirement_"):
                     VernalisationRequirement[int(name.split('_')[1]) - 1] = vector[i]
 
-            RootPenetrationRate = vector["RootPenetrationRate"]
-            SpecificRootLength = vector["SpecificRootLength"]
-            MaxAssimilationRate = vector["MaxAssimilationRate"]
-            CropSpecificMaxRootingDepth = vector["CropSpecificMaxRootingDepth"]
 
             # exchange the values in the environment template
-            for key, value in SpecificLeafArea.items():
-                current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["SpecificLeafArea"][0][key] = value
+            #Turn off if needed#
+            # for key, value in StageTemperatureSum.items():
+            #     current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["StageTemperatureSum"][0][key] = value
 
-            for key, value in StageTemperatureSum.items():
-                current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["StageTemperatureSum"][0][key] = value
+            # for key, value in BaseDaylength.items():
+            #     current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["BaseDaylength"][0][key] = value
+
+            # for key, value in DaylengthRequirement.items():
+            #     current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["DaylengthRequirement"][0][key] = value
+            
+            # for key, value in VernalisationRequirement.items():
+            #     current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["VernalisationRequirement"][key] = value
+
+
+            #Turn off if needed#
+            # for key, value in StageKcFactor.items():
+            #     current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["StageKcFactor"][0][key] = value
+
+            # current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["CropSpecificMaxRootingDepth"] = CropSpecificMaxRootingDepth
+            
+            # current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["species"]["RootPenetrationRate"] = RootPenetrationRate
+
+            # current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["species"]["SpecificRootLength"] = SpecificRootLength
 
             for key, value in DroughtStressThreshold.items():
                 current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["DroughtStressThreshold"][key] = value
-
-            for key, value in StageKcFactor.items():
-                current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["StageKcFactor"][0][key] = value
-
-            for key, value in BaseDaylength.items():
-                current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["BaseDaylength"][0][key] = value
-
-            for key, value in DaylengthRequirement.items():
-                current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["DaylengthRequirement"][0][key] = value
-
-            for key, value in VernalisationRequirement.items():
-                current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["VernalisationRequirement"][key] = value
-
-            current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["species"]["RootPenetrationRate"] = RootPenetrationRate
-            current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["species"]["SpecificRootLength"] = SpecificRootLength
-            current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["MaxAssimilationRate"] = MaxAssimilationRate
-            current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["CropSpecificMaxRootingDepth"] = CropSpecificMaxRootingDepth
+            
+            #current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["MaxAssimilationRate"] = MaxAssimilationRate
+            # for key, value in SpecificLeafArea.items():
+            #     current_env["cropRotation"][0]["worksteps"][0]["crop"]["cropParams"]["cultivar"]["SpecificLeafArea"][0][key] = value
 
             sim_envs.append(current_env)
 
@@ -450,8 +454,8 @@ class SpotSetup(object):
             env_template["params"]["siteParameters"]["HeightNN"] = float(meta['Elevation'])
             env_template["params"]["siteParameters"]["Latitude"] = float(meta['Lat'])
 
-            env_template["params"]["userEnvironmentParameters"]["AtmosphericCO2"] = float(meta['CO2']) \
-                if not 'no_co2' in meta['CO2'] and not pd.isna(meta['CO2']) else 0
+            if meta['CO2'] != 'no_co2' and not pd.isna(meta['CO2']):
+                env_template["params"]["userEnvironmentParameters"]["AtmosphericCO2"] = float(meta['CO2'])
 
             # complete crop rotation
             dates = set()
@@ -464,7 +468,7 @@ class SpotSetup(object):
             harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
             worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
 
-           # I need to update this to include a spin-up period
+           # I need to update this to include a spin-up period, add this to the producer
             start_date = sowing_date - relativedelta(months=6)
             env_template["csvViaHeaderOptions"]["start-date"] = start_date.strftime('%Y-%m-%d')
 
@@ -477,8 +481,8 @@ class SpotSetup(object):
                     tillage_event = copy.deepcopy(exp_no_to_management[exp_id][date])
                     tillage_date = datetime.strptime(tillage_event["date"], '%Y-%m-%d')
                     # Only add tillage events happening after sowing and before harvest
-                    # This would change if I include a spin-up, potentially remove
-                    if tillage_date >= sowing_date and tillage_date <= harvest_date:
+                    # Changed sowing_date to start_date, add this to the producer
+                    if tillage_date >= start_date and tillage_date <= harvest_date:
                         worksteps_copy.insert(-1, tillage_event)
 
             env_template["cropRotation"][0]["worksteps"] = worksteps_copy
@@ -532,12 +536,6 @@ class SpotSetup(object):
 
             layer = {
                 "Thickness": [thickness, "m"],
-                # "PoreVolume": [float(row['Pore_volume']), "m3/m3"] if pd.notnull(row['Pore_volume']) else [None,
-                #                                                                                            "m3/m3"],
-                # "FieldCapacity": [float(row['Field_capacity']), "m3/m3"] if pd.notnull(row['Field_capacity']) else
-                # [None, "m3/m3"],
-                # "PermanentWiltingPoint": [float(row['Wilting_point']), "m3/m3"] if pd.notnull(row['Wilting_point']) else
-                # [None, "m3/m3"],
                 "SoilRawDensity": [float(row['Raw_density']) * 1000.0, "kg/m3"] if pd.notnull(row['Raw_density']) else
                 print("Raw_density is missing for soil: ", soil_name),
                 "SoilOrganicCarbon": [float(row['Corg']), "%"] if pd.notnull(row['Corg']) else print(
@@ -546,11 +544,10 @@ class SpotSetup(object):
                 "Clay": [float(row['Clay']), "m3/m3"],
                 "Sand": [float(row['Sand']), "m3/m3"],
                 "Silt": [float(row['Silt']), "m3/m3"],
-                # "pH": float(row['pH']) if pd.notnull(row['pH']) else None,
-                # "KA5TextureClass": sand_and_clay_to_ka5_texture(float(row['Sand']), float(row['Clay'])),
-                # "Lambda": sand_and_clay_to_lambda(float(row['Sand']), float(row['Clay'])),
-                # "SoilMoisturePercentFC": [50.0, "%"],
-                # "SoilNitrate": [nitrate, "kg/ha"],
             }
             soil_profiles[soil_name].append(layer)
         return soil_profiles
+
+
+
+        

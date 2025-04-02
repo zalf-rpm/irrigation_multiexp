@@ -47,7 +47,7 @@ def run_consumer(server=None, port=None):
             print(f"{os.path.basename(__file__)} Couldn't create dir {path_to_out_dir}! Exiting.")
             exit(1)
 
-    daily_filepath = f"{path_to_out_dir}/Ex_All_Daily_MONICA_Results.csv"
+    daily_filepath = f"{path_to_out_dir}/Pip_Results_new.csv"
     with open(daily_filepath, "wt", newline="", encoding="utf-8") as daily_f:
         daily_writer = csv.writer(daily_f, delimiter=",")
 

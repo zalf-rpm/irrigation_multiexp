@@ -10,7 +10,8 @@
         "HeightNN": [
             0.0,
             "m"
-        ]
+        ],
+        "pwpFcSatFunction": "Toth"
     },
     "SoilTemperatureParameters": [
         "include-from-file",
