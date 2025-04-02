@@ -37,8 +37,8 @@ def run_producer(server=None, port=None):
         "mode": "mbm-local-remote",
         "server-port": port if port else "6666",
         "server": server if server else "localhost",
-        "sim.json": os.path.join(os.path.dirname(__file__), "sim.json"),
-        "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
+        "sim.json": os.path.join(os.path.dirname(__file__), "sim-muencheberg.json"),
+        "crop.json": os.path.join(os.path.dirname(__file__), "crop-muencheberg.json"),
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
         "monica_path_to_climate_dir": "C:/Users/senders/Documents/monica_win64_3.6.30/projects/irrigation_multiexp/data",
         # "monica_path_to_climate_dir": r"C:\Users\escueta\PycharmProjects\irrigation_multiexp\data",
@@ -141,7 +141,7 @@ def run_producer(server=None, port=None):
         if meta['Crop'] in ['PO', 'WC', 'ZU', 'TR']:
             continue
         # Crops for simulation: WW, WR, SM, SB #WW:winter wheat, WR: winter rye, SM: silage maize, SB: spring barley#
-        if (meta['Crop'] != 'SB' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
+        if (meta['Crop'] != 'WW' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
         #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in,
                 ['ATB_Marquart',
                  'FI_Dahlhausen',
@@ -154,8 +154,84 @@ def run_producer(server=None, port=None):
             continue
         # comment out experimental locations to be considered
 
-        # Set the crop based on the experiment
-        crop_json["cropRotation"][2] = meta['Crop']
+        original_crop_json = copy.deepcopy(crop_json)
+        original_crop_rotation = original_crop_json.get("cropRotationTemplates", {}).get(meta["Crop"], [])
+        original_harvest_step = None
+        for rotation in original_crop_rotation:
+            for ws in rotation["worksteps"]:
+                if ws["type"].lower() == "harvest":
+                    original_harvest_step = ws
+                    break
+
+        temp_env = monica_io3.create_env_json_from_json_config({
+            "crop": original_crop_json,
+            "site": site_json,
+            "sim": sim_json,
+            "climate": ""
+        })
+
+        worksteps: list = copy.deepcopy(temp_env["cropRotation"][0]["worksteps"])
+
+        sowing_base = datetime.strptime(meta['Sowing'], '%d.%m.%Y')
+        harvest_base = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
+        is_winter_crop = meta['Crop'] in ['WW', 'WB', 'WR']
+
+        crop_json["cropRotation"] = []
+
+        for year in range(1992, 2023):
+            sowing = sowing_base.replace(year=year)
+            harvest = harvest_base.replace(year=year + 1) if is_winter_crop else harvest_base.replace(year=year)
+
+            dates = set()
+            dates.update(exp_no_to_fertilizers[exp_no].keys(), exp_no_to_irrigation[exp_no].keys(),
+                         exp_no_to_management[exp_no].keys())
+
+            management_steps = []
+
+            for date in sorted(dates):
+                orig_date = datetime.strptime(date, '%Y-%m-%d')
+
+                if date in exp_no_to_management[exp_no]:
+                    shifted_date = orig_date.replace(year=year)
+                else:
+                    shifted_date = orig_date.replace(year=year + 1 if is_winter_crop and orig_date > sowing else year)
+
+                if shifted_date < sowing and date not in exp_no_to_management[exp_no]:
+                    shifted_date = shifted_date.replace(year=shifted_date.year + 1)
+
+                date_str = shifted_date.strftime('%Y-%m-%d')
+
+                if date in exp_no_to_fertilizers[exp_no]:
+                    fert = copy.deepcopy(exp_no_to_fertilizers[exp_no][date])
+                    fert["date"] = date_str
+                    management_steps.append(fert)
+                if date in exp_no_to_irrigation[exp_no]:
+                    irrig = copy.deepcopy(exp_no_to_irrigation[exp_no][date])
+                    irrig["date"] = date_str
+                    management_steps.append(irrig)
+                if date in exp_no_to_management[exp_no]:
+                    till = copy.deepcopy(exp_no_to_management[exp_no][date])
+                    till["date"] = date_str
+                    management_steps.append(till)
+
+            sowing_step = {
+                "type": "Sowing",
+                "date": sowing.strftime('%Y-%m-%d'),
+                "crop": ["ref", "crops", meta['Crop']]
+            }
+            harvest_step = {
+                "type": "Harvest",
+                "date": harvest.strftime('%Y-%m-%d')
+            }
+            if original_harvest_step:
+                for key in ["exported", "leaf", "shoot", "fruit", "struct", "sugar"]:
+                    if key in original_harvest_step:
+                        harvest_step[key] = original_harvest_step[key]
+
+            rotation = [sowing_step] + management_steps + [harvest_step]
+            crop_json["cropRotation"].append({
+                "worksteps": sorted(rotation, key=lambda ws: ws["date"])
+            })
 
         env_template = monica_io3.create_env_json_from_json_config({
             "crop": crop_json,
@@ -163,8 +239,6 @@ def run_producer(server=None, port=None):
             "sim": sim_json,
             "climate": ""  # climate_csv
         })
-
-        worksteps: list = copy.deepcopy(env_template["cropRotation"][0]["worksteps"])
 
         env_template["csvViaHeaderOptions"] = sim_json["climate.csv-options"]
         env_template["pathToClimateCSV"] = f"{config['monica_path_to_climate_dir']}/{meta['Weather']}.csv"
@@ -176,31 +250,6 @@ def run_producer(server=None, port=None):
 
         if meta['CO2'] != 'no_co2' and not pd.isna(meta['CO2']):
             env_template["params"]["userEnvironmentParameters"]["AtmosphericCO2"] = float(meta['CO2'])
-
-        # complete crop rotation
-        dates = set()
-        dates.update(exp_no_to_fertilizers[exp_no].keys(), exp_no_to_irrigation[exp_no].keys(),
-                     exp_no_to_management[exp_no].keys())
-
-        worksteps_copy = copy.deepcopy(worksteps)
-        sowing_date = datetime.strptime(meta['Sowing'], '%d.%m.%Y')
-        worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d') ## for start date, see line 294 in run-producer_1_1.py from agmip waterlogging###
-        harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
-        worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
-
-        for date in sorted(dates):
-            if date in exp_no_to_fertilizers[exp_no]:
-                worksteps_copy.insert(-1, copy.deepcopy(exp_no_to_fertilizers[exp_no][date]))
-            if date in exp_no_to_irrigation[exp_no]:
-                worksteps_copy.insert(-1, copy.deepcopy(exp_no_to_irrigation[exp_no][date]))
-            if date in exp_no_to_management[exp_no]:
-                tillage_event = copy.deepcopy(exp_no_to_management[exp_no][date])
-                tillage_date = datetime.strptime(tillage_event["date"], '%Y-%m-%d')
-                # Only add tillage events happening after sowing and before harvest
-                if tillage_date >= sowing_date and tillage_date <= harvest_date:
-                    worksteps_copy.insert(-1, tillage_event)
-
-        env_template["cropRotation"][0]["worksteps"] = worksteps_copy
 
         env_template["customId"] = {
             "nodata": False,
