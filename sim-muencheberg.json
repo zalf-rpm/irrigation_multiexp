@@ -37,6 +37,7 @@
 				"LAI",
 				"Yield",
 				"AbBiom",
+				["OrgBiom", "Root"],
 				"Tra|TRANS",
 				"Act_ET|ETa",
 				"RunOff|Roff",
