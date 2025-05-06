@@ -4,48 +4,48 @@
 			"is-winter-crop": true,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/wheat.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/wheat/winter-wheat_pheno_Kc_CSMRD_DST.json"],
-				"species": ["include-from-file", "monica-parameters/crops/wheat.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/wheat/winter-wheat_pheno_newM_Kc_CSMRD_DST.json"],
+				"species": ["include-from-file", "monica-parameters/crops/wheat_RPR_SRL.json"]
 			}
 		},
 		"WB": {
 			"is-winter-crop": true,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/barley.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/barley/winter-barley.json"],
-				"species": ["include-from-file", "monica-parameters/crops/barley.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/barley/winter-barley_pheno_newM_Kc_CSMRD_DST.json"],
+				"species": ["include-from-file", "monica-parameters/crops/barley_newM_RPR_SRL.json"]
 			}
 		},
 		"WR": {
 			"is-winter-crop": true,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/rye.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/rye/winter-rye.json"],
-				"species": ["include-from-file", "monica-parameters/crops/rye.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/rye/winter-rye_pheno_newM_Kc_CSMRD_DST.json"],
+				"species": ["include-from-file", "monica-parameters/crops/rye_newM_RPR_SRL.json"]
 			}
 		},
 		"SM": {
 			"is-winter-crop": false,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/maize.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/maize/silage-maize_bs_dwd_pheno.json"],
-				"species": ["include-from-file", "monica-parameters/crops/maize_klimertrag.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/maize/silage-maize_pheno_newM_Kc_CSMRD_DST.json"],
+				"species": ["include-from-file", "monica-parameters/crops/maize_newM_RPR_SRL.json"]
 			}
 		},
 		"SB": {
 			"is-winter-crop": false,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/barley.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/barley/spring-barley.json"],
-				"species": ["include-from-file", "monica-parameters/crops/barley.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/barley/spring-barley_pheno_newM_Kc_CSMRD_DST.json"],
+				"species": ["include-from-file", "monica-parameters/crops/barley_newM_RPR_SRL_spring.json"]
 			}
 		},
 		"SW": {
 			"is-winter-crop": false,
 			"residueParams": ["include-from-file", "monica-parameters/crop-residues/wheat.json"],
 			"cropParams": {
-				"cultivar": ["include-from-file", "monica-parameters/crops/wheat/spring-wheat.json"],
-				"species": ["include-from-file", "monica-parameters/crops/wheat.json"]
+				"cultivar": ["include-from-file", "monica-parameters/crops/wheat/spring-wheat_newM_Kc_CSMRD_DST.json"],
+				"species": ["include-from-file", "monica-parameters/crops/wheat_newM_RPR_SRL_spring.json"]
 			}
 		}
 	},
