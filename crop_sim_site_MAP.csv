@@ -1,4 +1,0 @@
-exp_ID,sim file,crop file,site file,climate file,species params,cv params,position in rotation *,crop ID (as in crop.json),"*separate with ""-"" if the crop has more than one position"
-EX53,sim.json,crop.json,site.json,weather3,wheat.json,wheat/winter-wheat.json,0,WW,
-EX462,sim.json,crop.json,site.json,weather6,wheat.json,wheat/winter-wheat.json,0,WW,
-EX588,sim.json,crop.json,site.json,weather13,wheat.json,wheat/winter-wheat.json,0,WW,
