@@ -40,7 +40,7 @@ def run_producer(server=None, port=None):
         "sim.json": os.path.join(os.path.dirname(__file__), "sim.json"),
         "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
-        "monica_path_to_climate_dir": "C:/Users/senders/Documents/monica_win64_3.6.30/projects/irrigation_multiexp/data",
+        "monica_path_to_climate_dir": "C:/Users/palka/GitHub/irrigation_multiexp/data",
         # "monica_path_to_climate_dir": r"C:\Users\escueta\PycharmProjects\irrigation_multiexp\data",
         "path_to_data_dir": "./data/",
         "path_to_out": "out/",
@@ -141,7 +141,7 @@ def run_producer(server=None, port=None):
         if meta['Crop'] in ['PO', 'WC', 'ZU', 'TR']:
             continue
         # Crops for simulation: WW, WR, SM, SB #WW:winter wheat, WR: winter rye, SM: silage maize, SB: spring barley#
-        if (meta['Crop'] != 'SB' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
+        if (meta['Crop'] != 'WW' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
         #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in,
                 ['ATB_Marquart',
                  'FI_Dahlhausen',
