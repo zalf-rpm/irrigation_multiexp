@@ -30,7 +30,7 @@ def run_consumer(server=None, port=None):
     config = {
         "port": port if port else "7777",
         "server": server if server else "localhost",
-        "path-to-output-dir": "./out",
+        "path-to-output-dir": "./out", 
     }
     shared.update_config(config, sys.argv, print_config=True, allow_new_keys=False)
 
@@ -47,23 +47,14 @@ def run_consumer(server=None, port=None):
             print(f"{os.path.basename(__file__)} Couldn't create dir {path_to_out_dir}! Exiting.")
             exit(1)
 
-    daily_filepath = f"{path_to_out_dir}/Pip_Results_new.csv"
+    daily_filepath = f"{path_to_out_dir}/20251204_newM_step3_newC.csv" #I think I could change things right here#
     with open(daily_filepath, "wt", newline="", encoding="utf-8") as daily_f:
         daily_writer = csv.writer(daily_f, delimiter=",")
 
         # Write headers
         daily_writer.writerow([
-            "Experiment", "Crop", "Date", "Zadocks phenology stage", "N Fertilizer", "Irrigation Amount",
-            "Primary Yield", "Total above biomass", "Leaf Area Index", "Daily Transpiration",
-            "Actual evapotranspiration", "Runoff", "Deep Percolation", "N Leaching", "Soil Water Content"
+            "Experiment", "Dry matter Yield", "Total above biomass"
         ])
-
-        swc_header_row = [f"SWC_{i}" for i in range(1, 21)]
-        n_header_row = [f"N_{i}" for i in range(1, 21)]
-        daily_writer.writerow([
-            "Exp", "Crop", "Date", "ZDPH", "NFert", "Irrig", "PYield", "AbBiom", "LAI", "TRANS", "ETa", "Roff", "DPER",
-            "NLEA"
-        ] + swc_header_row + n_header_row)
 
         no_of_exps_to_receive = None
         no_of_exps_received = 0
@@ -96,14 +87,10 @@ def run_consumer(server=None, port=None):
 
                 sowing_date = None
                 for vals in results:
-                    if not sowing_date:
-                        sowing_date = vals["Date"]
+                    # if not sowing_date:
+                    #     sowing_date = vals["Date"]
 
-                    swc_data = vals["SWC"]
-                    n_data = vals["N"]
-                    row = [exp_no, vals["Crop"], vals["Date"], vals["Stage"], vals["NFert"], vals["Irrig"],
-                           vals["Yield"], vals["AbBiom"], vals["LAI"], vals["TRANS"], vals["ETa"], vals["Roff"],
-                           vals["DPER"], vals["NLEA"]] + swc_data + n_data
+                    row = [exp_no, vals["DryYield"], vals["AbBiom"]]
                     daily_writer.writerow(row)
 
             except Exception as e:

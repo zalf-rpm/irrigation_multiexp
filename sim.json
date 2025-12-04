@@ -29,23 +29,9 @@
 			"csv-separator": ","
 		},
 		"events": [
-			{"start": "Sowing", "end": "Harvest"}, [
-				"Date",
-				"Crop",
-				"Stage",
-				"LAI",
-				"Yield",
+			{"at": "Harvest"}, [
 				"AbBiom",
-				"Tra|TRANS",
-				"Act_ET|ETa",
-				"RunOff|Roff",
-				["PercolationRate|DPER", 15],
-				"NLeach|NLEA",
-				["Mois|SWC", [1, 20]],
-				["Mois|SWC_top30", [1, 3], "SUM"],
-				["N", [1, 20]],
-				"Irrig",
-				"NFert"
+				["OrgBiom|DryYield", "FRUIT"]
 			]
 		],
 		"calibration_events": [
