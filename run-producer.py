@@ -23,6 +23,7 @@ import zmq
 from collections import defaultdict
 import pandas as pd
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import monica_io3
 import shared
@@ -38,7 +39,7 @@ def run_producer(server=None, port=None):
         "server-port": port if port else "6666",
         "server": server if server else "localhost",
         "sim.json": os.path.join(os.path.dirname(__file__), "sim.json"),
-        "crop.json": os.path.join(os.path.dirname(__file__), "crop.json"),
+        "crop.json": os.path.join(os.path.dirname(__file__), "crop_calibration_newM.json"), #change crop file name here.#
         "site.json": os.path.join(os.path.dirname(__file__), "site.json"),
         "monica_path_to_climate_dir": "C:/Users/palka/GitHub/irrigation_multiexp/data",
         # "monica_path_to_climate_dir": r"C:\Users\escueta\PycharmProjects\irrigation_multiexp\data",
@@ -140,16 +141,18 @@ def run_producer(server=None, port=None):
         # Skip experiments with these crops
         if meta['Crop'] in ['PO', 'WC', 'ZU', 'TR']:
             continue
-        # Crops for simulation: WW, WR, SM, SB #WW:winter wheat, WR: winter rye, SM: silage maize, SB: spring barley#
-        if (meta['Crop'] != 'WW' or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in
+        # Crops for simulation: WW, WR, SM, WB, SW, SB  #WW:winter wheat, WR: winter rye, SM: silage maize, SB: spring barley, WB: winter barley, SW: spring wheat#
+        # ['WW', 'WR', 'SM', 'WB', 'SW', 'SB']
+        if (meta['Crop'] in ['PO', 'WC', 'ZU', 'TR'] or pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in #Hier immer reinschreiben, was man nicht will#
         #if (pd.isna(meta['Sowing'] or pd.isna(meta['Harvest'])) or meta['Name'] in,
-                ['ATB_Marquart',
-                 'FI_Dahlhausen',
-                 'HUB_Thyrow_D1',
-                 'TI_Braunschweig_FACE',
+                [#'ATB_Marquart', 
+                 #'FI_Dahlhausen',
+                 #'HUB_Thyrow_D1',
+                 #'TI_Braunschweig_FACE',
                  #'ZALF_Muencheberg_V4',
-                 'JKI_Braunschweig_Rainshelter',
-                 'UTP_Bydgoszcz'
+                 #'JKI_Braunschweig_Rainshelter',
+                 #'UTP_Bydgoszcz',
+                 #'LTZ_Augustenberg' #LTZ is working#
                  ]):
             continue
         # comment out experimental locations to be considered
@@ -187,6 +190,9 @@ def run_producer(server=None, port=None):
         worksteps_copy[0]["date"] = sowing_date.strftime('%Y-%m-%d') ## for start date, see line 294 in run-producer_1_1.py from agmip waterlogging###
         harvest_date = datetime.strptime(meta['Harvest'], '%d.%m.%Y')
         worksteps_copy[-1]["date"] = harvest_date.strftime('%Y-%m-%d')
+
+        start_date = sowing_date - relativedelta(months=6)
+        env_template["csvViaHeaderOptions"]["start-date"] = start_date.strftime('%Y-%m-%d')
 
         for date in sorted(dates):
             if date in exp_no_to_fertilizers[exp_no]:
